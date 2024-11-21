@@ -29,3 +29,13 @@ DiplomaAdmissionsCampaign-
 
 ![image](https://github.com/user-attachments/assets/751ad9ef-1607-4513-ab8c-d226b01a4872)
 
+//Примеры экранов пользовательского интерфейса
+![image](https://github.com/user-attachments/assets/db73a290-4fa6-4b0f-b58b-10c774cce3cf)
+![image](https://github.com/user-attachments/assets/83d99911-2b1a-422e-b7a3-683899746a57)
+![image](https://github.com/user-attachments/assets/700eb408-346c-405e-b840-50a55f3e3959)
+![image](https://github.com/user-attachments/assets/805078f2-a0be-4c69-961b-50d4aaf4de5a)
+![image](https://github.com/user-attachments/assets/1a15f5c9-f9da-48e9-aa1c-df4d09fc4327)
+![image](https://github.com/user-attachments/assets/034fb31c-dc40-49f4-8e34-3be8e919d64e)
+![image](https://github.com/user-attachments/assets/54fd8685-e29e-4ee0-9402-e2ee4a5b95d7)
+
+
