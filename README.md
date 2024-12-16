@@ -38,4 +38,5 @@ DiplomaAdmissionsCampaign-
 ![image](https://github.com/user-attachments/assets/034fb31c-dc40-49f4-8e34-3be8e919d64e)
 ![image](https://github.com/user-attachments/assets/54fd8685-e29e-4ee0-9402-e2ee4a5b95d7)
 
-
+//Документация
+Ссылка на файл документации в POSTMAN: https://documenter.getpostman.com/view/27285331/2sAYHzFhjD
