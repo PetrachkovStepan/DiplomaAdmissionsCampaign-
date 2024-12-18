@@ -40,3 +40,7 @@ DiplomaAdmissionsCampaign-
 
 //Документация
 Ссылка на файл документации в POSTMAN: https://documenter.getpostman.com/view/27285331/2sAYHzFhjD
+
+//Развертывание
+работник: https://diploma-front-employee.vercel.app/?vercelToolbarCode=6E4zjPZ6cA_72-W
+абитуриент: https://diploma-front-enrollee-bmii.vercel.app/
