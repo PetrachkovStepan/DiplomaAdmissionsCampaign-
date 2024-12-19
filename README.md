@@ -44,3 +44,7 @@ DiplomaAdmissionsCampaign-
 //Развертывание
 работник: https://diploma-front-employee.vercel.app/?vercelToolbarCode=6E4zjPZ6cA_72-W
 абитуриент: https://diploma-front-enrollee-bmii.vercel.app/
+
+//Тестирование
+Тестирование произведено с помощью ьыьлиотеки Vitest 
+Покрытие: 80%
