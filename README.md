@@ -1,4 +1,4 @@
-![Pxi9PmwH8hY](https://github.com/user-attachments/assets/eb368a92-6a0e-4556-b337-3f0102d24a19)![image](https://github.com/user-attachments/assets/cb0ed56e-1495-4e27-8925-bd761f4a1eb9)# 
+![Pxi9PmwH8hY](https://github.com/user-attachments/assets/eb368a92-6a0e-4556-b337-3f0102d24a19)
 DiplomaAdmissionsCampaign-
 //1
 
