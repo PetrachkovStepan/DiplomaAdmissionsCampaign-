@@ -5,6 +5,9 @@ DiplomaAdmissionsCampaign-
 // С4
 ![VqM3dNc0A6s](https://github.com/user-attachments/assets/610debf9-c449-48d8-9427-9ef447a10884)
 
+![Uploading image.png…]()
+
+
 //DFD
 ![iMuRnMGT1V8](https://github.com/user-attachments/assets/130c3b29-6ed2-4d76-9480-ca9bf8323316)
 
