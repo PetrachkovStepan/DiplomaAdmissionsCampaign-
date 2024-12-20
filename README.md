@@ -1,8 +1,10 @@
 ![Pxi9PmwH8hY](https://github.com/user-attachments/assets/eb368a92-6a0e-4556-b337-3f0102d24a19)![image](https://github.com/user-attachments/assets/cb0ed56e-1495-4e27-8925-bd761f4a1eb9)# 
 DiplomaAdmissionsCampaign-
 //1
+
 // С4
 ![VqM3dNc0A6s](https://github.com/user-attachments/assets/610debf9-c449-48d8-9427-9ef447a10884)
+
 //DFD
 ![iMuRnMGT1V8](https://github.com/user-attachments/assets/130c3b29-6ed2-4d76-9480-ca9bf8323316)
 
@@ -48,3 +50,14 @@ DiplomaAdmissionsCampaign-
 //Тестирование
 Тестирование произведено с помощью ьыьлиотеки Vitest 
 Покрытие: 80%
+
+//Безопасность
+
+JWT (JSON Web Token) – это открытый стандарт для создания токенов доступа, основанный на формате JSON.
+
+![image](https://github.com/user-attachments/assets/b9479d5a-49fb-40ef-bb96-4f18e4b9094a)
+
+После выполнения запроса и успешной авторизации с сервера приходит готовый jwt токен.
+Для работы с авторизацией был написан кастомный хук обеспечивающий работу с токеном и запись информации в cookies.
+
+
