@@ -1,0 +1,11 @@
+.listItem {
+  @apply cursor-pointer hover:text-black;
+}
+
+.editIcon {
+  @apply mt-[0.1rem] rounded-full cursor-pointer hover:text-blue-600;
+}
+
+.editWrapper {
+  @apply flex gap-2 items-center w-fit text-gray-700;
+}
