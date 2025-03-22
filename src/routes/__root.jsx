@@ -1,24 +1,27 @@
-import "react";
-import { Outlet, createRootRoute, redirect } from "@tanstack/react-router";
-import { useAuth } from "../provider/authProvider";
-import { AuthPage } from "../pages/AuthPage/AuthPage";
-import { MainSidebar } from "../components/Sidebar";
-import { ShortLinkProvider } from "../provider/shortLinkProvider";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
 
-export const Route = createRootRoute({
-  component: RootComponent,
-});
+import { useAuth } from "provider/authProvider";
+import { MainHeader } from "components/Header";
+import { AuthPage } from "pages/AuthPage/AuthPage";
+import { ShortLinkProvider } from "provider/shortLinkProvider";
+
+import "react";
+import { PageContainer } from "@/pages/PageContainer/PageContainer";
+
+export const Route = createRootRoute({ component: RootComponent });
 
 function RootComponent() {
   const { cookies } = useAuth();
 
   return (
-    <div className='h-full grid place-items-center relative'>
+    <div className="h-full">
       {cookies?.userData?.token ? (
         <>
           <ShortLinkProvider>
-            <MainSidebar />
-            <Outlet />
+            <MainHeader />
+            <PageContainer>
+              <Outlet />
+            </PageContainer>
           </ShortLinkProvider>
         </>
       ) : (

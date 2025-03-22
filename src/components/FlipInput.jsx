@@ -4,7 +4,7 @@ import {
   PencilSquareIcon,
   XMarkIcon,
 } from "@heroicons/react/20/solid";
-import { FloatingLabel, Button, TextInput } from "flowbite-react";
+import { Button, TextInput } from "flowbite-react";
 import { useState } from "react";
 import "../reuse.css";
 
@@ -12,8 +12,6 @@ export const FlipInput = ({
   value = "",
   onChange = () => {},
   text = "Value",
-  fieldName,
-  submitText = "Submit",
   fieldParam,
   submitCallback = () => {},
 }) => {

@@ -11,9 +11,44 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SpecialityImport } from './routes/speciality'
+import { Route as EnrolleeprofileImport } from './routes/enrolleeprofile'
+import { Route as EnrolleeImport } from './routes/enrollee'
+import { Route as EmployeeImport } from './routes/employee'
+import { Route as AdmissionListImport } from './routes/admissionList'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const SpecialityRoute = SpecialityImport.update({
+  id: '/speciality',
+  path: '/speciality',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EnrolleeprofileRoute = EnrolleeprofileImport.update({
+  id: '/enrolleeprofile',
+  path: '/enrolleeprofile',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EnrolleeRoute = EnrolleeImport.update({
+  id: '/enrollee',
+  path: '/enrollee',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EmployeeRoute = EmployeeImport.update({
+  id: '/employee',
+  path: '/employee',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AdmissionListRoute = AdmissionListImport.update({
+  id: '/admissionList',
+  path: '/admissionList',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -32,6 +67,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/admissionList': {
+      id: '/admissionList'
+      path: '/admissionList'
+      fullPath: '/admissionList'
+      preLoaderRoute: typeof AdmissionListImport
+      parentRoute: typeof rootRoute
+    }
+    '/employee': {
+      id: '/employee'
+      path: '/employee'
+      fullPath: '/employee'
+      preLoaderRoute: typeof EmployeeImport
+      parentRoute: typeof rootRoute
+    }
+    '/enrollee': {
+      id: '/enrollee'
+      path: '/enrollee'
+      fullPath: '/enrollee'
+      preLoaderRoute: typeof EnrolleeImport
+      parentRoute: typeof rootRoute
+    }
+    '/enrolleeprofile': {
+      id: '/enrolleeprofile'
+      path: '/enrolleeprofile'
+      fullPath: '/enrolleeprofile'
+      preLoaderRoute: typeof EnrolleeprofileImport
+      parentRoute: typeof rootRoute
+    }
+    '/speciality': {
+      id: '/speciality'
+      path: '/speciality'
+      fullPath: '/speciality'
+      preLoaderRoute: typeof SpecialityImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -39,32 +109,76 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admissionList': typeof AdmissionListRoute
+  '/employee': typeof EmployeeRoute
+  '/enrollee': typeof EnrolleeRoute
+  '/enrolleeprofile': typeof EnrolleeprofileRoute
+  '/speciality': typeof SpecialityRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admissionList': typeof AdmissionListRoute
+  '/employee': typeof EmployeeRoute
+  '/enrollee': typeof EnrolleeRoute
+  '/enrolleeprofile': typeof EnrolleeprofileRoute
+  '/speciality': typeof SpecialityRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/admissionList': typeof AdmissionListRoute
+  '/employee': typeof EmployeeRoute
+  '/enrollee': typeof EnrolleeRoute
+  '/enrolleeprofile': typeof EnrolleeprofileRoute
+  '/speciality': typeof SpecialityRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admissionList'
+    | '/employee'
+    | '/enrollee'
+    | '/enrolleeprofile'
+    | '/speciality'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admissionList'
+    | '/employee'
+    | '/enrollee'
+    | '/enrolleeprofile'
+    | '/speciality'
+  id:
+    | '__root__'
+    | '/'
+    | '/admissionList'
+    | '/employee'
+    | '/enrollee'
+    | '/enrolleeprofile'
+    | '/speciality'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdmissionListRoute: typeof AdmissionListRoute
+  EmployeeRoute: typeof EmployeeRoute
+  EnrolleeRoute: typeof EnrolleeRoute
+  EnrolleeprofileRoute: typeof EnrolleeprofileRoute
+  SpecialityRoute: typeof SpecialityRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdmissionListRoute: AdmissionListRoute,
+  EmployeeRoute: EmployeeRoute,
+  EnrolleeRoute: EnrolleeRoute,
+  EnrolleeprofileRoute: EnrolleeprofileRoute,
+  SpecialityRoute: SpecialityRoute,
 }
 
 export const routeTree = rootRoute
@@ -77,11 +191,31 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.jsx",
       "children": [
-        "/"
+        "/",
+        "/admissionList",
+        "/employee",
+        "/enrollee",
+        "/enrolleeprofile",
+        "/speciality"
       ]
     },
     "/": {
       "filePath": "index.jsx"
+    },
+    "/admissionList": {
+      "filePath": "admissionList.jsx"
+    },
+    "/employee": {
+      "filePath": "employee.jsx"
+    },
+    "/enrollee": {
+      "filePath": "enrollee.jsx"
+    },
+    "/enrolleeprofile": {
+      "filePath": "enrolleeprofile.jsx"
+    },
+    "/speciality": {
+      "filePath": "speciality.jsx"
     }
   }
 }

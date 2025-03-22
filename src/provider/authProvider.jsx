@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import "react";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext } from "react";
 import { useCookies } from "react-cookie";
 
 const AuthContext = createContext(null);

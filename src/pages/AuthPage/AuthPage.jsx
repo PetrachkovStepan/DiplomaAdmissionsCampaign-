@@ -6,17 +6,17 @@ export const AuthPage = () => {
   const { form, error, isProcessing } = useAuthForm();
 
   return (
-    <div className=' grid place-items-center h-full'>
+    <div className=" grid place-items-center h-full">
       <form
-        className=' grid grid-flow-row gap-3 w-72'
+        className=" grid grid-flow-row gap-3 w-72"
         onSubmitCapture={(e) => {
           e.preventDefault();
           form.handleSubmit();
         }}
       >
-        <Label className='place-self-center text-lg mb-5' value='My Meeting' />
+        <Label className="place-self-center text-lg mb-5" value="My Meeting" />
         <form.Field
-          name='login'
+          name="login"
           validators={{
             onChange: ({ value }) =>
               value.length <= 0 ? "Field should not be empty" : undefined,
@@ -35,7 +35,7 @@ export const AuthPage = () => {
           }}
         />
         <form.Field
-          name='password'
+          name="password"
           validators={{
             onChange: ({ value }) =>
               value.length <= 0 ? "Field should not be empty" : undefined,
@@ -46,7 +46,7 @@ export const AuthPage = () => {
               value={field.state.value}
               placeholder={"Password"}
               style={{ borderRadius: "0.125rem" }}
-              type='password'
+              type="password"
               color={error ? "failure" : ""}
               onChange={(e) => field.handleChange(e.target.value)}
             />
@@ -56,9 +56,9 @@ export const AuthPage = () => {
           selector={(state) => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
             <Button
-              className='mt-2 rounded-sm'
-              color='dark'
-              type='submit'
+              className="mt-2 rounded-sm"
+              color="dark"
+              type="submit"
               disabled={!canSubmit}
               isProcessing={isProcessing}
             >
