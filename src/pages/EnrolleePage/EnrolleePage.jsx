@@ -4,13 +4,12 @@ import { Button, Select, ToggleSwitch } from "flowbite-react";
 
 import "../../reuse.css";
 import { TableContainer } from "@/components/TableContainer";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 
 export const EnrolleePage = () => {
   // const { cookies } = useAuth();
   const [approve_switch, setApproveSwitch] = useState(false);
   const navigate = useNavigate();
-  // const { cookies } = useAuth();
 
   const table_head = [
     "№",
@@ -28,7 +27,6 @@ export const EnrolleePage = () => {
       commitionDate: "12-12-2025",
       buttons: (
         <div className=" flex flex-row gap-3">
-          <Link to={"/enrolleeprofile"}>000</Link>
           <Button
             outline={true}
             size="xs"

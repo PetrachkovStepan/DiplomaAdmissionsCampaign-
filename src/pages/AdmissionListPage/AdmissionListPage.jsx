@@ -1,16 +1,14 @@
 import { useState } from "react";
 
-import { Button, Select, TextInput } from "flowbite-react";
+import { Button, Select } from "flowbite-react";
 
-import { FloatingTextInput } from "@/components/FloatingTextInput";
-
-import { useAuth } from "../../provider/authProvider";
+// import { useAuth } from "../../provider/authProvider";
 
 import "../../reuse.css";
 import { TableContainer } from "@/components/TableContainer";
 
 export const AdmissionListPage = () => {
-  const { cookies } = useAuth();
+  // const { cookies } = useAuth();
   const [specFilter, setSpecFilter] = useState(true);
   // const [specFilterData, setSpecFilterData] = useState("blank");
   // const [facultyFilterData, setFacultyFilterData] = useState("blank");
