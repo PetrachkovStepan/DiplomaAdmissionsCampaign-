@@ -48,9 +48,7 @@ export const EnrolleePage = () => {
 
   return (
     <div className=" flex flex-col">
-      <div className="flex flex-row w-full justify-center gap-5">
-        <Button>Создать список поступивших</Button>
-
+      <div className="flex flex-row w-full gap-5 items-center mb-4">
         <ToggleSwitch
           checked={approve_switch}
           label="не одобрено"
@@ -61,7 +59,6 @@ export const EnrolleePage = () => {
           <option value={"1"}>ФИО</option>
           <option value={"2"}>Дате подачи</option>
         </Select>
-        <Button disabled={true}>Скачать список поступивших</Button>
       </div>
       <TableContainer table_head={table_head} data={enrollee_list_data} />
     </div>

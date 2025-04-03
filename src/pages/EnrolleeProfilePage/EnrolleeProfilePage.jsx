@@ -9,16 +9,12 @@ export const EnrolleeProfilePage = () => {
   const [approve_switch, setApproveSwitch] = useState(false);
   // const { cookies } = useAuth();
 
-  
-
   return (
     <div className=" flex flex-col">
       <div className="flex flex-row w-full justify-center gap-5">
-        <Button>Создать список поступивших</Button>
-
         <ToggleSwitch
           checked={approve_switch}
-          label="не одобрено"
+          label="Одобрить заявку"
           onChange={setApproveSwitch}
         />
         <Select id="specialities" disabled={false}>
@@ -26,7 +22,6 @@ export const EnrolleeProfilePage = () => {
           <option value={"1"}>ФИО</option>
           <option value={"2"}>Дате подачи</option>
         </Select>
-        <Button disabled={true}>Скачать список поступивших</Button>
       </div>
     </div>
   );
