@@ -2,7 +2,8 @@ import { Button, Select } from "flowbite-react";
 
 import "../../reuse.css";
 import { TableContainer } from "@/components/TableContainer";
-
+import { FlowbiteIcons } from "flowbite-react-icons";
+import { AngleDown, AngleUp, TrashBin } from "flowbite-react-icons/outline";
 // import { useAuth } from "@/provider/authProvider";
 
 export const ApplicationPage = () => {
@@ -16,13 +17,19 @@ export const ApplicationPage = () => {
       name: "Информационные системы и технологии обработки кала (в кабель менеджменте)",
       faculty: "ФКП",
       edit: (
-        <div className="flex flex-rowitems-center gap-4">
-          <Button size="xs">+</Button>
-          <Button size="xs">-</Button>
-          <Button size="xs" color="red">
-            *
-          </Button>
-        </div>
+        <FlowbiteIcons size={16}>
+          <div className="flex flex-rowitems-center gap-4">
+            <Button outline={true} size="xs">
+              <AngleUp />
+            </Button>
+            <Button outline={true} size="xs">
+              <AngleDown />
+            </Button>
+            <Button size="xs" outline={true}>
+              <TrashBin />
+            </Button>
+          </div>
+        </FlowbiteIcons>
       ),
     },
     {
@@ -31,13 +38,19 @@ export const ApplicationPage = () => {
       name: "Информационные системы и технологии обработки кала (в кабель менеджменте)",
       faculty: "ФКП",
       edit: (
-        <div className="flex flex-rowitems-center gap-4">
-          <Button size="xs">+</Button>
-          <Button size="xs">-</Button>
-          <Button size="xs" color="red">
-            *
-          </Button>
-        </div>
+        <FlowbiteIcons size={16}>
+          <div className="flex flex-rowitems-center gap-4">
+            <Button outline={true} size="xs">
+              <AngleUp />
+            </Button>
+            <Button outline={true} size="xs">
+              <AngleDown />
+            </Button>
+            <Button size="xs" outline={true}>
+              <TrashBin />
+            </Button>
+          </div>
+        </FlowbiteIcons>
       ),
     },
   ];

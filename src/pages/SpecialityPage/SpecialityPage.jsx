@@ -4,6 +4,7 @@ import { Button, ToggleSwitch } from "flowbite-react";
 
 import { FloatingTextInput } from "@/components/FloatingTextInput";
 
+import { Carrot, TrashBin } from "flowbite-react-icons/outline";
 import "../../reuse.css";
 import { TableContainer } from "@/components/TableContainer";
 
@@ -36,10 +37,10 @@ export const SpecialityPage = () => {
       buttons: (
         <div className=" flex flex-row gap-3">
           <Button outline={true} size="xs">
-            Изменить
+            <Carrot />
           </Button>
           <Button outline={true} size="xs">
-            Удалить
+            <TrashBin />
           </Button>
         </div>
       ),

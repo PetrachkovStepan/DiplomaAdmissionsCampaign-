@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Button, Select, ToggleSwitch } from "flowbite-react";
+import { Select, ToggleSwitch } from "flowbite-react";
 
 import "../../reuse.css";
 

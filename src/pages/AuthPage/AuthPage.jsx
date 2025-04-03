@@ -14,7 +14,10 @@ export const AuthPage = () => {
           form.handleSubmit();
         }}
       >
-        <Label className="place-self-center text-lg mb-5" value="My Meeting" />
+        <Label
+          className="place-self-center text-lg"
+          value="Электронный абитуриент"
+        />
         <form.Field
           name="login"
           validators={{
@@ -26,9 +29,10 @@ export const AuthPage = () => {
               <TextInput
                 id={field.name}
                 value={field.state.value}
-                placeholder={"Login"}
-                style={{ borderRadius: "0.125rem" }}
+                type="email"
+                placeholder={"name@gmail.com"}
                 color={error ? "failure" : ""}
+                required
                 onChange={(e) => field.handleChange(e.target.value)}
               />
             );
@@ -44,10 +48,10 @@ export const AuthPage = () => {
             <TextInput
               id={field.name}
               value={field.state.value}
-              placeholder={"Password"}
-              style={{ borderRadius: "0.125rem" }}
+              placeholder={"Пароль"}
               type="password"
               color={error ? "failure" : ""}
+              required
               onChange={(e) => field.handleChange(e.target.value)}
             />
           )}
@@ -56,13 +60,11 @@ export const AuthPage = () => {
           selector={(state) => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
             <Button
-              className="mt-2 rounded-sm"
-              color="dark"
               type="submit"
               disabled={!canSubmit}
               isProcessing={isProcessing}
             >
-              {isSubmitting ? "..." : "Login"}
+              {isSubmitting ? "..." : "Войти"}
             </Button>
           )}
         />

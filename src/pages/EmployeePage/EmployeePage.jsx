@@ -1,7 +1,6 @@
-// /* eslint-disable no-undef */EmployeePage
 import "../../reuse.css";
 
-import { useState } from "react";
+// import { useState } from "react";
 
 import { Button } from "flowbite-react";
 import { Carrot, TrashBin } from "flowbite-react-icons/outline";
@@ -51,7 +50,7 @@ export const EmployeePage = () => {
 
   return (
     <div className=" flex flex-row h-full">
-        <TableContainer table_head={table_head} data={spec_data} />
+      <TableContainer table_head={table_head} data={spec_data} />
       <form className="max-w-md mx-auto">
         <FloatingTextInput id_name={"email"} placeholder="e-mail" />
         <FloatingTextInput id_name={"name"} placeholder="ФИО" />
