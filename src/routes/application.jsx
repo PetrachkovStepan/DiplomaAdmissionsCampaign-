@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ApplicationPage } from "@/pages/ApplicationPage/ApplicationPage";
 
-export const Route = createFileRoute("/speciality copy")({
+export const Route = createFileRoute("/application")({
   component: RouteComponent,
 });
 

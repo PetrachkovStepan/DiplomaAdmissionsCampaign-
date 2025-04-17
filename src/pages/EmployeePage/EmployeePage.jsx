@@ -9,10 +9,10 @@ import { FloatingTextInput } from "@/components/FloatingTextInput";
 import "../../reuse.css";
 import { TableContainer } from "@/components/TableContainer";
 
-// import { useAuth } from "@/provider/authProvider";
+import { useAuth } from "@/provider/authProvider";
 
 export const EmployeePage = () => {
-  // const { cookies } = useAuth();
+  const { cookies } = useAuth();
 
   const table_head = [
     "E-mail",
@@ -47,6 +47,7 @@ export const EmployeePage = () => {
       ),
     },
   ];
+  console.log(cookies.userData.record.role);
 
   return (
     <div className=" flex flex-row h-full">
