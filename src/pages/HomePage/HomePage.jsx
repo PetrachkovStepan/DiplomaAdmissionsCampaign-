@@ -1,20 +1,38 @@
 // import { useAuth } from "@/provider/authProvider";
 // import { useState } from "react";
 
-import { Button, Radio, Label, Datepicker } from "flowbite-react";
+import { Button, Radio, Label, Datepicker, Textarea } from "flowbite-react";
+
+import { TrashBin } from "flowbite-react-icons/outline";
 
 import { FloatingTextInput } from "@/components/FloatingTextInput";
 import "../../reuse.css";
 import { useNavigate } from "@tanstack/react-router";
+import { TableContainer } from "@/components/TableContainer";
 
 export const Homepage = () => {
   // const { cookies } = useAuth();
   const navigate = useNavigate();
+  const table_head = ["№", "Описание", ""];
+  const data = [
+    {
+      id: "boofId",
+      num: "1",
+      desc: "Ахеревше крутая льгота ломающая баланс вселеннойхеревше крутая льгота ломающая баланс вселеннойхеревше крутая льгота ломающая баланс вселенной",
+      buttons: (
+        <div className="flex justify-center">
+          <Button outline={true} size="xs">
+            <TrashBin />
+          </Button>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div className="w-full h-full">
       <form className="grid grid-cols-2 gap-4">
-        <div className="сol-span-1 row-span-2 shadow-md p-4 rounded-md">
+        <div className="сol-span-1  shadow-md p-4 rounded-md">
           <div className="mb-4">
             <Label className=" text-lg">Паспортные данные</Label>
           </div>
@@ -81,18 +99,32 @@ export const Homepage = () => {
             <Datepicker id_name={"releaseDate"} language="ru" />
           </div>
         </div>
-        <div>
-          <Button
-            type="submit"
-            className="mt-5 w-full"
-            onSubmit={(e) => {
-              e.preventDefault();
-              navigate("/admissionList");
-            }}
-          >
-            Продолжить
-          </Button>
+        <div className="col-span-2 shadow-md p-4 rounded-md">
+          <div className="mb-4">
+            <Label className="text-lg">Льготы</Label>
+          </div>
+          <div className=" grid grid-rows-2 md:grid-rows-1 md:grid-cols-2 gap-4">
+            <div className="flex flex-col justify-between gap-4">
+              <Textarea />
+              <Button>Добавить льготу</Button>
+            </div>
+            <TableContainer
+              table_head={table_head}
+              data={data}
+            ></TableContainer>
+          </div>
         </div>
+        <Button
+          type="submit"
+          className="my-5 w-full col-span-2"
+          size="xl"
+          onSubmit={() => {
+            // e.preventDefault();
+            navigate("/admissionList");
+          }}
+        >
+          Продолжить
+        </Button>
       </form>
     </div>
   );

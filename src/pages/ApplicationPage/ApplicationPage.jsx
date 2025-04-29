@@ -4,10 +4,13 @@ import "../../reuse.css";
 import { TableContainer } from "@/components/TableContainer";
 import { FlowbiteIcons } from "flowbite-react-icons";
 import { AngleDown, AngleUp, TrashBin } from "flowbite-react-icons/outline";
+import { useState } from "react";
 // import { useAuth } from "@/provider/authProvider";
 
 export const ApplicationPage = () => {
   // const { cookies } = useAuth();
+  const [specFilter, setSpecFilter] = useState(true);
+  const [buttonActive, setButtonActive] = useState(true);
 
   const table_head = ["№", "Имя специальности", "Факультет", "Редактирование"];
   const spec_data = [
@@ -58,19 +61,38 @@ export const ApplicationPage = () => {
   return (
     <div className=" flex flex-col h-full gap-4">
       <form className=" flex w-full gap-4 flex-row items-center justify-center">
-        <Select id={"spec_num"}>
+        <Select
+          id={"spec_num"}
+          onChange={(e) => {
+            if (e.target.value == "blank") {
+              setSpecFilter(true);
+            } else {
+              setSpecFilter(false);
+            }
+          }}
+        >
           <option value={"blank"}>Факультет</option>
           <option value={"ФКП"}>ФКП</option>
           <option value={"ФРЭ"}>ФРЭ</option>
         </Select>
-        <Select id={"spec_name"}>
+        <Select
+          id={"spec_name"}
+          disabled={specFilter}
+          onChange={(e) => {
+            if (e.target.value == "blank") {
+              setButtonActive(true);
+            } else {
+              setButtonActive(false);
+            }
+          }}
+        >
           <option value={"blank"}>Cпециальность</option>
           <option value={"1"}>специальность 1</option>
           <option value={"2"}>специальность 2</option>
           <option value={"3"}>специальность 3</option>
           <option value={"4"}>специальность 4</option>
         </Select>
-        <Button type="submit" className="">
+        <Button type="submit" disabled={buttonActive}>
           Добавить
         </Button>
       </form>

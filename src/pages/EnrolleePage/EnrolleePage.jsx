@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { Button, Select, ToggleSwitch } from "flowbite-react";
 
+import { TrashBin } from "flowbite-react-icons/outline";
 import "../../reuse.css";
 import { TableContainer } from "@/components/TableContainer";
 import { useNavigate } from "@tanstack/react-router";
@@ -29,7 +30,6 @@ export const EnrolleePage = () => {
         <div className=" flex flex-row gap-3">
           <Button
             outline={true}
-            size="xs"
             onClick={() => {
               navigate({
                 to: "/enrolleeprofile",
@@ -39,7 +39,7 @@ export const EnrolleePage = () => {
             Рассмотреть заявку
           </Button>
           <Button outline={true} size="xs">
-            Удалить
+            <TrashBin />
           </Button>
         </div>
       ),
