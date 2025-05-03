@@ -15,9 +15,10 @@ export const TableContainer = ({ table_head, data }) => {
     <Table>
       <TableHead>
         {table_head.map((item, i) => (
-          <TableHeadCell key={i}>{item}</TableHeadCell>
+          <TableHeadCell key={i} className="text-center">
+            {item}
+          </TableHeadCell>
         ))}
-        <TableHeadCell></TableHeadCell>
       </TableHead>
       <TableBody>
         {data.map((item) => (
@@ -25,7 +26,9 @@ export const TableContainer = ({ table_head, data }) => {
             {Object.values(item)
               .slice(1)
               .map((item, i) => (
-                <TableCell key={i}>{item}</TableCell>
+                <TableCell key={i} className=" p-2 text-center">
+                  {item}
+                </TableCell>
               ))}
           </TableRow>
         ))}

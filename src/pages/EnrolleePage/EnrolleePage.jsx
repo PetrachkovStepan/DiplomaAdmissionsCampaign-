@@ -27,7 +27,7 @@ export const EnrolleePage = () => {
       status: "Одобрена",
       commitionDate: "12-12-2025",
       buttons: (
-        <div className=" flex flex-row gap-3">
+        <div className=" flex flex-row justify-center gap-3">
           <Button
             outline={true}
             onClick={() => {
@@ -47,8 +47,8 @@ export const EnrolleePage = () => {
   ];
 
   return (
-    <div className=" flex flex-col">
-      <div className="flex flex-row w-full gap-5 items-center mb-4">
+    <div className=" flex flex-col h-full w-full ">
+      <div className="flex flex-row justify-center w-full gap-5 items-center mb-4">
         <ToggleSwitch
           checked={approve_switch}
           label="не одобрено"
@@ -60,7 +60,9 @@ export const EnrolleePage = () => {
           <option value={"2"}>Дате подачи</option>
         </Select>
       </div>
-      <TableContainer table_head={table_head} data={enrollee_list_data} />
+      <div className=" flex h-full justify-center">
+        <TableContainer table_head={table_head} data={enrollee_list_data} />
+      </div>
     </div>
   );
 };

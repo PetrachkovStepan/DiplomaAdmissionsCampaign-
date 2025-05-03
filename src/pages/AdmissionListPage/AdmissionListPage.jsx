@@ -18,7 +18,7 @@ export const AdmissionListPage = () => {
     "Факультет",
     "ФИО студента",
     "Балл",
-    "Наличие льгот",
+    "Категория",
   ];
   const list_data = [
     {
@@ -28,7 +28,7 @@ export const AdmissionListPage = () => {
       faculty: "ФКП",
       student_name: "Иванов Иван Иванович",
       points: 320,
-      is_benefits: "+",
+      is_benefits: "1",
     },
     {
       id: "boofId2",
@@ -37,7 +37,7 @@ export const AdmissionListPage = () => {
       faculty: "ФКП",
       student_name: "Иванов Иван Иванович",
       points: 320,
-      is_benefits: "+",
+      is_benefits: "2",
     },
     {
       id: "boofId3",
@@ -46,12 +46,12 @@ export const AdmissionListPage = () => {
       faculty: "ФКП",
       student_name: "Иванов Иван Иванович",
       points: 320,
-      is_benefits: "+",
+      is_benefits: "2",
     },
   ];
 
   return (
-    <div className=" flex flex-col ">
+    <div className=" flex flex-col gap-5  h-full">
       <div className="flex flex-row w-full justify-center gap-5">
         <Button>Создать список поступивших</Button>
         <Select
@@ -78,7 +78,9 @@ export const AdmissionListPage = () => {
         <Button>Применить фильтры</Button>
         <Button disabled={true}>Скачать</Button>
       </div>
-      <TableContainer table_head={table_head} data={list_data} />
+      <div className=" flex h-full justify-center">
+        <TableContainer table_head={table_head} data={list_data} />
+      </div>
     </div>
   );
 };
