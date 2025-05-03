@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import { Button, ToggleSwitch } from "flowbite-react";
 
@@ -8,11 +8,26 @@ import { Carrot, TrashBin } from "flowbite-react-icons/outline";
 import "../../reuse.css";
 import { TableContainer } from "@/components/TableContainer";
 
-// import { useAuth } from "@/provider/authProvider";
+import { ApiContext } from "@/context/ApiContext";
 
 export const SpecialityPage = () => {
   const [military_switch, setMilitarySwitch] = useState(false);
-  // const { cookies } = useAuth();
+  const { getListOfEntities } = useContext(ApiContext);
+
+  let getAllSpec = async () => {
+    console.log(
+      await getListOfEntities("Speciality", {
+        expand: [],
+        fields: [],
+        page: -1,
+        perPage: -1,
+        sort: [],
+        filter: [],
+        skipTotal: -1,
+      })
+    );
+  };
+  getAllSpec();
 
   const table_head = [
     "№",

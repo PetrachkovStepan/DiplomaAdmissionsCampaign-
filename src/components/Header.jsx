@@ -1,22 +1,14 @@
 import { Button } from "flowbite-react";
 import { Navbar } from "flowbite-react";
-import { useCookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
 
 import "../reuse.css";
 
 export const MainHeader = () => {
-  // const { cookies } = useAuth();
-  const [cookies, setCookie] = useCookies(["userData"]);
-  const { role } = cookies.userData.record;
-  // const { token } = cookies.userData;
-  // const [clientName, changeClientName] = useState(name);
+  // const [cookies, setCookie] = useCookies(["userData"]);
+  // const { role } = cookies.userData.record;
+  const role = 0;
 
-  // const submitCallback = async () => {
-  //   const formData = new FormData();
-  //   formData.append("name", clientName);
-  //   const newData = await updateUser(cookies.userData.record, formData, token);
-  //   await updateCredits(newData);
-  // };
   const headerSwitch = (role) => {
     switch (role) {
       case 0:

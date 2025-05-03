@@ -1,31 +1,70 @@
-/* eslint-disable react/prop-types */
-import "react";
-import { createContext, useContext } from "react";
+import axios from "axios";
 import { useCookies } from "react-cookie";
+import { AuthContext } from "../context/AuthContext";
+import { get } from "lodash";
+import { useAntNotification } from "../utils/notification";
 
-const AuthContext = createContext(null);
+const AuthProvider = ({ children }) => {
+  const [_, setCookie, removeCookie] = useCookies(["auth-token"]);
+  const { antNotification, contextHolder } = useAntNotification();
 
-export function AuthProvider({ children }) {
-  const [cookies, setCookie, removeCookie] = useCookies(["userData"]);
-  const updateCredits = (data) => {
-    setCookie("userData", data, {
-      expires: new Date(Date.now() + 604800000),
-    });
+  const authenticate = async ({ email, password }) => {
+    try {
+      const { data } = await axios.post(
+        "http://127.0.0.1:8090/api/collections/users/auth-with-password",
+        { identity: email, password: password }
+      );
+      setCookie("auth-token", get(data, "token"), {
+        expires: new Date(Date.now() + 12096e5),
+      });
+    } catch {
+      antNotification({
+        type: "error",
+        customTitle: "Failure",
+        customMessage: "Invalid credentials",
+      });
+    }
+  };
+
+  const register = async ({ email, password, name }) => {
+    try {
+      const { data } = await axios.post(
+        "http://127.0.0.1:8090/api/collections/users/records",
+        {
+          email: email,
+          password: password,
+          passwordConfirm: password,
+          name: name,
+        }
+      );
+      setCookie("auth-token", get(data, "token"), {
+        expires: new Date(Date.now() + 12096e5),
+      });
+    } catch {
+      antNotification({
+        type: "error",
+        customTitle: "Failure",
+        customMessage: "User with such email already exists",
+      });
+    }
+  };
+
+  const unAuthenticate = () => {
+    removeCookie("auth-token");
+  };
+
+  const contextData = {
+    authenticate,
+    unAuthenticate,
+    register,
   };
 
   return (
-    <AuthContext.Provider
-      value={{ cookies, setCookie, removeCookie, updateCredits }}
-    >
+    <AuthContext.Provider value={contextData}>
+      {contextHolder}
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-}
+export default AuthProvider;

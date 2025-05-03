@@ -2,12 +2,15 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
-import { AuthProvider, useAuth } from "./provider/authProvider";
-import { QueryProvider } from "./provider/queryProvider";
 import { CookiesProvider } from "react-cookie";
 import "./input.css";
 import { Flowbite } from "flowbite-react";
-import { ShortLinkProvider } from "./provider/shortLinkProvider";
+
+import AuthProvider from "./provider/AuthProvider";
+import ApiProvider from "./provider/ApiProvider";
+
+import { Provider } from "react-redux";
+import { store } from "./store";
 
 const mainTheme = {
   button: {
@@ -19,21 +22,18 @@ const mainTheme = {
 
 const router = createRouter({ routeTree });
 
-function AppRouterProvider() {
-  const auth = useAuth();
-  return <RouterProvider router={router} context={{ auth }} />;
-}
-
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <CookiesProvider defaultSetOptions={{ path: "/" }}>
-      <QueryProvider>
+    <Provider store={store}>
+      <CookiesProvider>
         <AuthProvider>
+          <ApiProvider>
             <Flowbite theme={{ theme: mainTheme }}>
-              <AppRouterProvider/>
+              <RouterProvider router={router} />
             </Flowbite>
+          </ApiProvider>
         </AuthProvider>
-      </QueryProvider>
-    </CookiesProvider>
+      </CookiesProvider>
+    </Provider>
   </StrictMode>
 );

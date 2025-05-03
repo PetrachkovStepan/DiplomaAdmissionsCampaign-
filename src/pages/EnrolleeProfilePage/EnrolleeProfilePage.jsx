@@ -1,7 +1,6 @@
-import { useState } from "react";
 
-import { Select, TextInput, ToggleSwitch } from "flowbite-react";
-import { Button, Datepicker, Label, Radio, Textarea } from "flowbite-react";
+import { Select, TextInput } from "flowbite-react";
+import { Button, Datepicker, Label, Radio } from "flowbite-react";
 
 import { useNavigate } from "@tanstack/react-router";
 import { TrashBin } from "flowbite-react-icons/outline";
@@ -11,7 +10,6 @@ import { FloatingTextInput } from "@/components/FloatingTextInput";
 import "../../reuse.css";
 
 export const EnrolleeProfilePage = () => {
-  // const { cookies } = useAuth();
   const navigate = useNavigate();
   const exam_table_head = ["Пердмет", "Балл", ""];
   const exam_data = [

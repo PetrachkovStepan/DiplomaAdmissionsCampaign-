@@ -1,74 +1,177 @@
 /* eslint-disable react/no-children-prop */
-import { Button, Label, TextInput } from "flowbite-react";
-import { useAuthForm } from "../../hooks/useAuthForm";
+import { Button } from "flowbite-react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import { useForm } from "@tanstack/react-form";
+import { Spin } from "antd";
+import FormInput from "../../universalComponents/FormInput";
+import { useAntNotification } from "../../utils/notification";
 
 export const AuthPage = () => {
-  const { form, error, isProcessing } = useAuthForm();
+  const { authenticate, register } = useContext(AuthContext);
+
+  const [isNewUser, setIsNewUser] = useState(false);
+  const { antNotification } = useAntNotification();
+
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+      name: "",
+    },
+    onSubmit: async ({ value }) => {
+      if (isNewUser) {
+        await register(value);
+      } else {
+        await authenticate(value);
+      }
+    },
+  });
+
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
 
   return (
-    <div className=" grid place-items-center h-full">
-      <form
-        className=" grid grid-flow-row gap-3 w-72"
-        onSubmitCapture={(e) => {
-          e.preventDefault();
-          form.handleSubmit();
-        }}
-      >
-        <Label
-          className="place-self-center text-lg"
-          value="Электронный абитуриент"
-        />
-        <form.Field
-          name="login"
-          validators={{
-            onChange: ({ value }) =>
-              value.length <= 0 ? "Field should not be empty" : undefined,
-          }}
-          children={(field) => {
-            return (
-              <TextInput
-                id={field.name}
-                value={field.state.value}
-                type="email"
-                placeholder={"name@gmail.com"}
-                color={error ? "failure" : ""}
-                required
-                onChange={(e) => field.handleChange(e.target.value)}
+    <>
+      <div className="w-full h-full bg-[#101011] grid place-items-center relative">
+        <div className="max-w-[90vw] max-h-[70vh] min-w-[30vw] min-h-[40vh] backdrop-blur-md bg-[#7171752d] flex flex-col p-5 items-center gap-6">
+          <h1 className="text-5xl font-semibold text-[#e7eef1]">IT Meetups</h1>
+          <form
+            className="w-full"
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              form.handleSubmit();
+            }}
+          >
+            <div className="mb-5 text-[#bbbbbb]">
+              {!isNewUser
+                ? "First time on service?"
+                : "Already have an account?"}{" "}
+              <Button
+                onClick={() => setIsNewUser((prev) => !prev)}
+                className="!p-0 !h-fit !text-[#8d859e]"
+                type="text"
+              >
+                {!isNewUser ? "Register" : "Log in"}
+              </Button>
+            </div>
+            <div className="flex flex-col items-start gap-1.5 w-full">
+              {isNewUser && (
+                <form.Field
+                  name="name"
+                  validators={{
+                    onChange: ({ value }) =>
+                      !value
+                        ? "A name is required"
+                        : value.length < 3
+                          ? "Name must be at least 3 characters"
+                          : undefined,
+                  }}
+                  children={(field) => {
+                    // Avoid hasty abstractions. Render props are great!
+                    return (
+                      <>
+                        <FormInput
+                          id={field.name}
+                          title={"Name"}
+                          errorMessage={field.state.meta.errors.join(", ")}
+                          name={field.name}
+                          value={field.state.value}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                        />
+                      </>
+                    );
+                  }}
+                />
+              )}
+              <form.Field
+                name="email"
+                validators={{
+                  onChange: ({ value }) =>
+                    !value
+                      ? "Email is required"
+                      : !validateEmail(value)
+                        ? "Invalid email format"
+                        : undefined,
+                }}
+                children={(field) => {
+                  // Avoid hasty abstractions. Render props are great!
+                  return (
+                    <>
+                      <FormInput
+                        id={field.name}
+                        title={"Email"}
+                        errorMessage={field.state.meta.errors.join(", ")}
+                        name={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                      />
+                    </>
+                  );
+                }}
               />
-            );
-          }}
-        />
-        <form.Field
-          name="password"
-          validators={{
-            onChange: ({ value }) =>
-              value.length <= 0 ? "Field should not be empty" : undefined,
-          }}
-          children={(field) => (
-            <TextInput
-              id={field.name}
-              value={field.state.value}
-              placeholder={"Пароль"}
-              type="password"
-              color={error ? "failure" : ""}
-              required
-              onChange={(e) => field.handleChange(e.target.value)}
-            />
-          )}
-        />
-        <form.Subscribe
-          selector={(state) => [state.canSubmit, state.isSubmitting]}
-          children={([canSubmit, isSubmitting]) => (
-            <Button
-              type="submit"
-              disabled={!canSubmit}
-              isProcessing={isProcessing}
-            >
-              {isSubmitting ? "..." : "Войти"}
-            </Button>
-          )}
-        />
-      </form>
-    </div>
+              <form.Field
+                name="password"
+                validators={{
+                  onChange: ({ value }) =>
+                    !value
+                      ? "Password is required"
+                      : value.length < 8
+                        ? "Password must be at least 8 characters long"
+                        : undefined,
+                }}
+                children={(field) => {
+                  // Avoid hasty abstractions. Render props are great!
+                  return (
+                    <>
+                      <FormInput
+                        id={field.name}
+                        inputType="password"
+                        title={"Password"}
+                        errorMessage={field.state.meta.errors.join(", ")}
+                        name={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                      />
+                    </>
+                  );
+                }}
+              />
+              <div className="mt-4 flex items-center gap-2 w-full flex-col">
+                <form.Subscribe
+                  selector={(state) => [state.canSubmit, state.isSubmitting]}
+                  children={([canSubmit, isSubmitting]) => (
+                    <Button
+                      className="!text-black !rounded-none !bg-white hover:!bg-black hover:!text-white "
+                      htmlType="submit"
+                      disabled={!canSubmit}
+                    >
+                      <span className="font-semibold">
+                        {isSubmitting ? (
+                          <Spin />
+                        ) : isNewUser ? (
+                          "Sign Up"
+                        ) : (
+                          "Sign In"
+                        )}
+                      </span>
+                    </Button>
+                  )}
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </>
   );
 };
