@@ -1,15 +1,54 @@
-import "../../reuse.css";
-
-// import { useState } from "react";
+import { useState, useContext } from "react";
 
 import { Button } from "flowbite-react";
+import { useSelector, useDispatch } from "react-redux";
+
+import { AuthContext } from "@/context/AuthContext";
+import { ApiContext } from "@/context/ApiContext";
+import { useForm } from "@tanstack/react-form";
+import { TableContainer } from "@/components/TableContainer";
 import { Carrot, TrashBin } from "flowbite-react-icons/outline";
 import { FloatingTextInput } from "@/components/FloatingTextInput";
 
+import { addEmployee, changeEmloyee, removeEmployee } from "./employeeSlice";
+
 import "../../reuse.css";
-import { TableContainer } from "@/components/TableContainer";
+import "../../reuse.css";
 
 export const EmployeePage = () => {
+  const { authenticate, register } = useContext(AuthContext);
+  const [isUpdate, setIsUpdate] = useState(false);
+
+  const [isNewUser, setIsNewUser] = useState(false);
+
+  const dispatch = useDispatch();
+  const employee = useSelector((state) => state.employee.employee);
+  const handleAddEmloyee = () => {
+    console.log("Created User");
+
+    dispatch(addEmployee());
+  };
+  console.log(employee);
+  // const form = useForm({
+  //   defaultValues: {
+  //     email: "",
+  //     password: "",
+  //     name: "",
+  //     role: 0,
+  //     phoneNum: "",
+  //     department: "",
+  //     education: "",
+  //     jobTitle: "",
+  //     blocked: false,
+  //   },
+  //   onSubmit: async ({ value }) => {
+  //     if (isNewUser) {
+  //       await register(value);
+  //     } else {
+  //       await authenticate(value);
+  //     }
+  //   },
+  // });
 
   const table_head = [
     "E-mail",
@@ -18,7 +57,6 @@ export const EmployeePage = () => {
     "Отделение",
     "Образование",
     "Должность",
-    "Редактирование",
   ];
   const spec_data = [
     {
@@ -29,26 +67,26 @@ export const EmployeePage = () => {
       department: "ФКП",
       education: "Бакалавр",
       jobTitle: "Ассистент кафедры",
-      buttons: (
-        <div className=" flex flex-row gap-3">
-          <Button outline={true} size="xs">
-            Заблокировать
-          </Button>
-          <Button outline={true} size="xs">
-            <Carrot />
-          </Button>
-          <Button outline={true} size="xs">
-            <TrashBin />
-          </Button>
-        </div>
-      ),
     },
   ];
 
   return (
     <div className=" flex flex-row h-full">
-      <TableContainer table_head={table_head} data={spec_data} />
-      <form className="max-w-md mx-auto">
+      <TableContainer
+        table_head={table_head}
+        data={spec_data}
+        editing={true}
+        isBlockButton={true}
+        isEditButton={true}
+        isDeleteButton={true}
+      />
+      <form
+        className="max-w-md mx-auto"
+        onSubmit={(event) => {
+          event.preventDefault();
+          isUpdate ? handleAddEmloyee() : handleAddEmloyee();
+        }}
+      >
         <FloatingTextInput id_name={"email"} placeholder="e-mail" />
         <FloatingTextInput id_name={"name"} placeholder="ФИО" />
         <FloatingTextInput id_name={"password"} placeholder="Пароль" />

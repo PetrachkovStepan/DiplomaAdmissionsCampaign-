@@ -12,49 +12,19 @@ export const ApplicationPage = () => {
   const [specFilter, setSpecFilter] = useState(true);
   const [buttonActive, setButtonActive] = useState(true);
 
-  const table_head = ["№", "Имя специальности", "Факультет", "Редактирование"];
+  const table_head = ["№", "Имя специальности", "Факультет"];
   const spec_data = [
     {
       id: "boofId",
       num: "1-39 01 01",
       name: "Информационные системы и технологии обработки кала (в кабель менеджменте)",
       faculty: "ФКП",
-      edit: (
-        <FlowbiteIcons size={16}>
-          <div className="flex flex-rowitems-center gap-4">
-            <Button outline={true} size="xs">
-              <AngleUp />
-            </Button>
-            <Button outline={true} size="xs">
-              <AngleDown />
-            </Button>
-            <Button size="xs" outline={true}>
-              <TrashBin />
-            </Button>
-          </div>
-        </FlowbiteIcons>
-      ),
     },
     {
       id: "boofId1",
       num: "1-39 01 01",
       name: "Информационные системы и технологии обработки кала (в кабель менеджменте)",
       faculty: "ФКП",
-      edit: (
-        <FlowbiteIcons size={16}>
-          <div className="flex flex-rowitems-center gap-4">
-            <Button outline={true} size="xs">
-              <AngleUp />
-            </Button>
-            <Button outline={true} size="xs">
-              <AngleDown />
-            </Button>
-            <Button size="xs" outline={true}>
-              <TrashBin />
-            </Button>
-          </div>
-        </FlowbiteIcons>
-      ),
     },
   ];
 
@@ -96,7 +66,26 @@ export const ApplicationPage = () => {
           Добавить
         </Button>
       </form>
-      <TableContainer table_head={table_head} data={spec_data} />
+      <TableContainer
+        table_head={table_head}
+        data={spec_data}
+        editing={true}
+        buttons={
+          <FlowbiteIcons size={16}>
+            <div className="flex flex-rowitems-center gap-4">
+              <Button outline={true} size="xs">
+                <AngleUp />
+              </Button>
+              <Button outline={true} size="xs">
+                <AngleDown />
+              </Button>
+              <Button size="xs" outline={true}>
+                <TrashBin />
+              </Button>
+            </div>
+          </FlowbiteIcons>
+        }
+      />
       <Button className="">Скaчать заявление</Button>
     </div>
   );

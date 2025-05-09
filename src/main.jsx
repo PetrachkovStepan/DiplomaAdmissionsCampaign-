@@ -1,16 +1,18 @@
 import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import { createRouter, RouterProvider } from "@tanstack/react-router";
-import { routeTree } from "./routeTree.gen";
-import { CookiesProvider } from "react-cookie";
-import "./input.css";
-import { Flowbite } from "flowbite-react";
-
-import AuthProvider from "./provider/AuthProvider";
-import ApiProvider from "./provider/ApiProvider";
 
 import { Provider } from "react-redux";
-import { store } from "./store";
+import { Flowbite } from "flowbite-react";
+import { CookiesProvider } from "react-cookie";
+
+import store from "@/store/index";
+import { createRoot } from "react-dom/client";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
+
+import { routeTree } from "./routeTree.gen";
+import ApiProvider from "./provider/ApiProvider";
+import AuthProvider from "./provider/AuthProvider";
+
+import "./input.css";
 
 const mainTheme = {
   button: {

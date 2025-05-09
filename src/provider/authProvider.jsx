@@ -5,7 +5,7 @@ import { get } from "lodash";
 import { useAntNotification } from "../utils/notification";
 
 const AuthProvider = ({ children }) => {
-  const [_, setCookie, removeCookie] = useCookies(["auth-token"]);
+  const [_, setCookie, removeCookie] = useCookies(["auth-token", "user-role"]);
   const { antNotification, contextHolder } = useAntNotification();
 
   const authenticate = async ({ email, password }) => {
@@ -15,6 +15,9 @@ const AuthProvider = ({ children }) => {
         { identity: email, password: password }
       );
       setCookie("auth-token", get(data, "token"), {
+        expires: new Date(Date.now() + 12096e5),
+      });
+      setCookie("user-role", get(data, "record.role"), {
         expires: new Date(Date.now() + 12096e5),
       });
     } catch {
@@ -35,9 +38,13 @@ const AuthProvider = ({ children }) => {
           password: password,
           passwordConfirm: password,
           name: name,
+          role: 2,
         }
       );
       setCookie("auth-token", get(data, "token"), {
+        expires: new Date(Date.now() + 12096e5),
+      });
+      setCookie("user-role", get(data, "record.role"), {
         expires: new Date(Date.now() + 12096e5),
       });
     } catch {

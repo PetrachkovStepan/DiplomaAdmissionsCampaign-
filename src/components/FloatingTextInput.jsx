@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import "../reuse.css";
 
-export const FloatingTextInput = ({ id_name, placeholder, ...props }) => {
+export const FloatingTextInput = ({ id_name, placeholder, errorMessage, ...props }) => {
   return (
     <div className="relative z-0 w-full mb-5 group">
       <input
@@ -20,10 +20,15 @@ export const FloatingTextInput = ({ id_name, placeholder, ...props }) => {
       >
         {placeholder}
       </label>
+
+      <label className='text-red-500 mt-0.5 text-sm ml-1'>
+        {errorMessage || "\t"}
+      </label>
     </div>
   );
 };
 FloatingTextInput.propTypes = {
   id_name: PropTypes.string,
   placeholder: PropTypes.string,
+  errorMessage: PropTypes.string,
 };

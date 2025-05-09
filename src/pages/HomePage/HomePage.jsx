@@ -13,19 +13,12 @@ import { TableContainer } from "@/components/TableContainer";
 export const Homepage = () => {
   // const { cookies } = useAuth();
   const navigate = useNavigate();
-  const table_head = ["№", "Описание", ""];
+  const table_head = ["№", "Описание"];
   const data = [
     {
       id: "boofId",
       num: "1",
       desc: "Ахеревше крутая льгота ломающая баланс вселеннойхеревше крутая льгота ломающая баланс вселеннойхеревше крутая льгота ломающая баланс вселенной",
-      buttons: (
-        <div className="flex justify-center">
-          <Button outline={true} size="xs">
-            <TrashBin />
-          </Button>
-        </div>
-      ),
     },
   ];
 
@@ -110,7 +103,15 @@ export const Homepage = () => {
             </div>
             <TableContainer
               table_head={table_head}
+              editing={true}
               data={data}
+              buttons={
+                <div className="flex justify-center">
+                  <Button outline={true} size="xs">
+                    <TrashBin />
+                  </Button>
+                </div>
+              }
             ></TableContainer>
           </div>
         </div>

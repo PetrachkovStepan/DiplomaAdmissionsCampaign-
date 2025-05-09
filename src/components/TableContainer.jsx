@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {
   Table,
   TableBody,
@@ -10,7 +11,7 @@ import PropTypes from "prop-types";
 
 import "../reuse.css";
 
-export const TableContainer = ({ table_head, data }) => {
+export const TableContainer = ({ table_head, data, editing, buttons }) => {
   return (
     <Table>
       <TableHead>
@@ -19,6 +20,7 @@ export const TableContainer = ({ table_head, data }) => {
             {item}
           </TableHeadCell>
         ))}
+        {editing ? <TableHeadCell>Редактирование</TableHeadCell> : null}
       </TableHead>
       <TableBody>
         {data.map((item) => (
@@ -30,6 +32,7 @@ export const TableContainer = ({ table_head, data }) => {
                   {item}
                 </TableCell>
               ))}
+            {buttons ? <TableCell>{buttons}</TableCell> : null}
           </TableRow>
         ))}
       </TableBody>
@@ -39,4 +42,5 @@ export const TableContainer = ({ table_head, data }) => {
 TableContainer.propTypes = {
   table_head: PropTypes.array,
   data: PropTypes.array,
+  editing: PropTypes.bool,
 };

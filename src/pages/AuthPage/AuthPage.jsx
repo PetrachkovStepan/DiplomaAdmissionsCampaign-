@@ -5,13 +5,11 @@ import { AuthContext } from "../../context/AuthContext";
 import { useForm } from "@tanstack/react-form";
 import { Spin } from "antd";
 import FormInput from "../../universalComponents/FormInput";
-import { useAntNotification } from "../../utils/notification";
 
 export const AuthPage = () => {
   const { authenticate, register } = useContext(AuthContext);
 
   const [isNewUser, setIsNewUser] = useState(false);
-  const { antNotification } = useAntNotification();
 
   const form = useForm({
     defaultValues: {
@@ -38,9 +36,9 @@ export const AuthPage = () => {
 
   return (
     <>
-      <div className="w-full h-full bg-[#101011] grid place-items-center relative">
+      <div className="w-full h-full grid place-items-center relative">
         <div className="max-w-[90vw] max-h-[70vh] min-w-[30vw] min-h-[40vh] backdrop-blur-md bg-[#7171752d] flex flex-col p-5 items-center gap-6">
-          <h1 className="text-5xl font-semibold text-[#e7eef1]">IT Meetups</h1>
+          <h1 className="text-xl">Электронный абитуриент</h1>
           <form
             className="w-full"
             onSubmit={(e) => {
@@ -49,28 +47,22 @@ export const AuthPage = () => {
               form.handleSubmit();
             }}
           >
-            <div className="mb-5 text-[#bbbbbb]">
-              {!isNewUser
-                ? "First time on service?"
-                : "Already have an account?"}{" "}
-              <Button
-                onClick={() => setIsNewUser((prev) => !prev)}
-                className="!p-0 !h-fit !text-[#8d859e]"
-                type="text"
-              >
-                {!isNewUser ? "Register" : "Log in"}
-              </Button>
+            <div
+              className="mb-5 cursor-pointer"
+              onClick={() => setIsNewUser((prev) => !prev)}
+            >
+              {!isNewUser ? "Нет аккаунта?" : "Уже есть аккаунт?"}{" "}
             </div>
-            <div className="flex flex-col items-start gap-1.5 w-full">
+            <div className="flex flex-col items-start gap-4 w-full">
               {isNewUser && (
                 <form.Field
                   name="name"
                   validators={{
                     onChange: ({ value }) =>
                       !value
-                        ? "A name is required"
+                        ? "Обязательное поле"
                         : value.length < 3
-                          ? "Name must be at least 3 characters"
+                          ? "ФИО должно иметь минимум 3 символа"
                           : undefined,
                   }}
                   children={(field) => {
@@ -79,7 +71,7 @@ export const AuthPage = () => {
                       <>
                         <FormInput
                           id={field.name}
-                          title={"Name"}
+                          title={"ФИО"}
                           errorMessage={field.state.meta.errors.join(", ")}
                           name={field.name}
                           value={field.state.value}
@@ -96,9 +88,9 @@ export const AuthPage = () => {
                 validators={{
                   onChange: ({ value }) =>
                     !value
-                      ? "Email is required"
+                      ? "Обязательное поле"
                       : !validateEmail(value)
-                        ? "Invalid email format"
+                        ? "Неверный формат почты"
                         : undefined,
                 }}
                 children={(field) => {
@@ -123,9 +115,9 @@ export const AuthPage = () => {
                 validators={{
                   onChange: ({ value }) =>
                     !value
-                      ? "Password is required"
+                      ? "Обязательное поле"
                       : value.length < 8
-                        ? "Password must be at least 8 characters long"
+                        ? "Имя должно иметь минимум 8 символов"
                         : undefined,
                 }}
                 children={(field) => {
@@ -135,7 +127,7 @@ export const AuthPage = () => {
                       <FormInput
                         id={field.name}
                         inputType="password"
-                        title={"Password"}
+                        title={"Пароль"}
                         errorMessage={field.state.meta.errors.join(", ")}
                         name={field.name}
                         value={field.state.value}
@@ -146,22 +138,18 @@ export const AuthPage = () => {
                   );
                 }}
               />
-              <div className="mt-4 flex items-center gap-2 w-full flex-col">
+              <div className="mt-5 flex items-center gap-2 w-full flex-col">
                 <form.Subscribe
                   selector={(state) => [state.canSubmit, state.isSubmitting]}
                   children={([canSubmit, isSubmitting]) => (
-                    <Button
-                      className="!text-black !rounded-none !bg-white hover:!bg-black hover:!text-white "
-                      htmlType="submit"
-                      disabled={!canSubmit}
-                    >
+                    <Button type="submit" disabled={!canSubmit}>
                       <span className="font-semibold">
                         {isSubmitting ? (
                           <Spin />
                         ) : isNewUser ? (
-                          "Sign Up"
+                          "Зарегистрироваться"
                         ) : (
-                          "Sign In"
+                          "Войти"
                         )}
                       </span>
                     </Button>

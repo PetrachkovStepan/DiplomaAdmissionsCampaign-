@@ -1,4 +1,3 @@
-
 import { Select, TextInput } from "flowbite-react";
 import { Button, Datepicker, Label, Radio } from "flowbite-react";
 
@@ -17,13 +16,6 @@ export const EnrolleeProfilePage = () => {
       id: "boofId",
       subgect: "Математика",
       mark: 100,
-      buttons: (
-        <div className="flex w-[30px] justify-center">
-          <Button outline={true} size="xs" color="red">
-            <TrashBin />
-          </Button>
-        </div>
-      ),
     },
   ];
   const benefit_table_head = ["№", "Описание"];
@@ -31,7 +23,7 @@ export const EnrolleeProfilePage = () => {
     {
       id: "boofId2",
       num: 1,
-      desc: "Ахеревше крутая льгота ломающая баланс вселеннойхеревше крутая льгота ломающая баланс вселеннойхеревше крутая льгота ломающая баланс вселенной",
+      desc: "Ахеревше крутая льгота ломающая баланс вселеннойхеревше крутая льгота ломающая баланс вселеннойхеревше крутая льгота ломающая баланс вселенной"
     },
   ];
   return (
@@ -132,6 +124,13 @@ export const EnrolleeProfilePage = () => {
             <TableContainer
               table_head={exam_table_head}
               data={exam_data}
+              buttons={
+                <div className="flex w-[30px] justify-center">
+                  <Button outline={true} size="xs" color="red">
+                    <TrashBin />
+                  </Button>
+                </div>
+              }
             ></TableContainer>
           </div>
         </article>

@@ -12,6 +12,8 @@ export const AdmissionListPage = () => {
   const [specFilter, setSpecFilter] = useState(true);
   // const [specFilterData, setSpecFilterData] = useState("blank");
   // const [facultyFilterData, setFacultyFilterData] = useState("blank");
+
+  
   const table_head = [
     "№ специальности",
     "Имя спец.",
@@ -76,7 +78,7 @@ export const AdmissionListPage = () => {
           <option value={"4"}>специальность 4</option>
         </Select>
         <Button>Применить фильтры</Button>
-        <Button disabled={true}>Скачать</Button>
+        <Button disabled={specFilter}>Скачать</Button>
       </div>
       <div className=" flex h-full justify-center">
         <TableContainer table_head={table_head} data={list_data} />

@@ -3,11 +3,10 @@ import { Navbar } from "flowbite-react";
 // import { useCookies } from "react-cookie";
 
 import "../reuse.css";
+import { useCookies } from "react-cookie";
 
 export const MainHeader = () => {
-  // const [cookies, setCookie] = useCookies(["userData"]);
-  // const { role } = cookies.userData.record;
-  const role = 0;
+    const [cookies, setCookie] = useCookies(["auth-token", "user-role"]);
 
   const headerSwitch = (role) => {
     switch (role) {
@@ -47,14 +46,14 @@ export const MainHeader = () => {
       <div className="flex md:order-2">
         <Button
           onClick={() => {
-            setCookie("userData", null);
+            setCookie("auth-token", null);
           }}
         >
           Выйти
         </Button>
         <Navbar.Toggle />
       </div>
-      <Navbar.Collapse>{headerSwitch(role)}</Navbar.Collapse>
+      <Navbar.Collapse>{headerSwitch(cookies["user-role"])}</Navbar.Collapse>
     </Navbar>
   );
 };

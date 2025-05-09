@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { Button, Select, ToggleSwitch } from "flowbite-react";
 
@@ -6,11 +6,31 @@ import { TrashBin } from "flowbite-react-icons/outline";
 import "../../reuse.css";
 import { TableContainer } from "@/components/TableContainer";
 import { useNavigate } from "@tanstack/react-router";
+import { ApiContext } from "@/context/ApiContext";
 
 export const EnrolleePage = () => {
   // const { cookies } = useAuth();
   const [approve_switch, setApproveSwitch] = useState(false);
   const navigate = useNavigate();
+  const [enrolleeData, setEnrolleeData] = useState([]);
+  const { getListOfEntities } = useContext(ApiContext);
+
+  useEffect(() => {
+    getAllEnrollee();
+  }, []);
+  const getAllEnrollee = async () => {
+    const enrollee_data = await getListOfEntities("users", {
+      expand: [],
+      fields: [],
+      page: -1,
+      perPage: -1,
+      sort: [],
+      filter: ["role=2"],
+      skipTotal: -1,
+    });
+    console.log(enrollee_data.data.items);
+    // setEnrolleeData(enrollee_data.data.items);
+  };
 
   const table_head = [
     "№",
@@ -26,23 +46,6 @@ export const EnrolleePage = () => {
       name: "Иванов Иван Иванович",
       status: "Одобрена",
       commitionDate: "12-12-2025",
-      buttons: (
-        <div className=" flex flex-row justify-center gap-3">
-          <Button
-            outline={true}
-            onClick={() => {
-              navigate({
-                to: "/enrolleeprofile",
-              });
-            }}
-          >
-            Рассмотреть заявку
-          </Button>
-          <Button outline={true} size="xs">
-            <TrashBin />
-          </Button>
-        </div>
-      ),
     },
   ];
 
@@ -61,7 +64,27 @@ export const EnrolleePage = () => {
         </Select>
       </div>
       <div className=" flex h-full justify-center">
-        <TableContainer table_head={table_head} data={enrollee_list_data} />
+        <TableContainer
+          table_head={table_head}
+          data={enrollee_list_data}
+          buttons={
+            <div className=" flex flex-row justify-center gap-3">
+              <Button
+                outline={true}
+                onClick={() => {
+                  navigate({
+                    to: "/enrolleeprofile",
+                  });
+                }}
+              >
+                Рассмотреть заявку
+              </Button>
+              <Button outline={true} size="xs">
+                <TrashBin />
+              </Button>
+            </div>
+          }
+        />
       </div>
     </div>
   );

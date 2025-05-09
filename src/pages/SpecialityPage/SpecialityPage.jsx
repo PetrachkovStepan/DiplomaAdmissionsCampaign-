@@ -1,97 +1,187 @@
-import { useContext, useState } from "react";
+/* eslint-disable react/no-children-prop */
+import { useContext, useEffect } from "react";
 
-import { Button, ToggleSwitch } from "flowbite-react";
+import { Button } from "flowbite-react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { FloatingTextInput } from "@/components/FloatingTextInput";
-
-import { Carrot, TrashBin } from "flowbite-react-icons/outline";
-import "../../reuse.css";
-import { TableContainer } from "@/components/TableContainer";
-
+import { useForm } from "@tanstack/react-form";
 import { ApiContext } from "@/context/ApiContext";
+import { validateSpecCode } from "@/utils/validators";
+import { changeEdit } from "@/store/globalSlice/isEditSlice";
+import { FloatingTextInput } from "@/components/FloatingTextInput";
+import { SpecialityTable } from "@/components/tables/SpecialityTable";
+
+import {
+  addSpeciality,
+  changeSpeciality,
+  getSpecialities,
+} from "./specialitySlice";
+
+import "../../reuse.css";
 
 export const SpecialityPage = () => {
-  const [military_switch, setMilitarySwitch] = useState(false);
-  const { getListOfEntities } = useContext(ApiContext);
+  const dispatch = useDispatch();
+  const speciality = useSelector((state) => state.speciality.speciality);
+  const isEdit = useSelector((state) => state.isEdit);
+  const { getEntityById, getListOfEntities, createEntity, updateEntity } =
+    useContext(ApiContext);
 
-  let getAllSpec = async () => {
-    console.log(
-      await getListOfEntities("Speciality", {
-        expand: [],
-        fields: [],
-        page: -1,
-        perPage: -1,
-        sort: [],
-        filter: [],
-        skipTotal: -1,
-      })
-    );
+  useEffect(() => {
+    getAllSpec();
+  }, []);
+  useEffect(() => {
+    if (isEdit.isEdit) {
+      getOneSpec();
+    }
+  }, [isEdit]);
+
+  const getAllSpec = async () => {
+    const spec_data = await getListOfEntities("Speciality", {
+      expand: [],
+      fields: [],
+      page: -1,
+      perPage: -1,
+      sort: [],
+      filter: [],
+      skipTotal: -1,
+    });
+    dispatch(getSpecialities(spec_data.data.items));
   };
-  getAllSpec();
+  const getOneSpec = async () => {
+    const spec_data = await getEntityById("Speciality", isEdit.id, {
+      expand: [],
+      fields: [],
+    });
+    form.reset(spec_data);
+  };
 
-  const table_head = [
-    "№",
-    "Имя спец.",
-    "Факультет",
-    "Бюджетных мест",
-    "Осталось",
-    "Платных мест",
-    "Осталось",
-    "Редактирование",
-  ];
-  const spec_data = [
-    {
-      id: "boofId",
-      num: "1-39 01 01",
-      name: "ИСИТ(БМ)",
-      faculty: "ФКП",
-      budget_spots: 20,
-      budget_free_spots: 20,
-      paid_spots: 20,
-      paid_free_spots: 20,
-      buttons: (
-        <div className=" flex flex-row gap-3">
-          <Button outline={true} size="xs">
-            <Carrot />
-          </Button>
-          <Button outline={true} size="xs">
-            <TrashBin />
-          </Button>
-        </div>
-      ),
+  const form = useForm({
+    defaultValues: {
+      code: "",
+      facultyName: "",
+      name: "",
+      budgetBarrier: 0,
+      budgetCount: 0,
+      budgetSpots: 0,
+      paidBarrier: 0,
+      paidCount: 0,
+      paidSpots: 0,
     },
-  ];
+    onSubmit: async ({ value }) => {
+      console.log(value);
+      if (!isEdit.isEdit) {
+        const entity = await createEntity("Speciality", value);
+        dispatch(addSpeciality(entity.data));
+        console.log("created");
+      } else {
+        const entity = await updateEntity("Speciality", isEdit.id, value);
+        console.log("entity");
+        console.log(entity);
+        dispatch(changeEdit(""));
+        dispatch(changeSpeciality(entity));
+        form.reset(form.defaultValues);
+      }
+    },
+  });
 
   return (
     <div className=" flex flex-row h-full">
-      <TableContainer table_head={table_head} data={spec_data} />
-      <form className="max-w-md mx-auto">
-        <FloatingTextInput
-          id_name={"spec_num"}
-          placeholder="Номер специальности"
+      <SpecialityTable data={speciality} />
+      <form
+        className="max-w-md mx-auto"
+        onSubmit={(event) => {
+          event.preventDefault();
+          form.handleSubmit();
+        }}
+      >
+        <form.Field
+          name="code"
+          validators={{
+            onChange: ({ value }) =>
+              !validateSpecCode(value) ? "Неверный формат" : undefined,
+          }}
+          children={(field) => {
+            return (
+              <>
+                <FloatingTextInput
+                  id_name={"code"}
+                  id={field.name}
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="Номер специальности"
+                />
+              </>
+            );
+          }}
         />
-        <FloatingTextInput
-          id_name={"spec_name"}
-          placeholder="Имя специальности"
+        <form.Field
+          name="name"
+          children={(field) => {
+            return (
+              <>
+                <FloatingTextInput
+                  id_name={"spec_name"}
+                  id={field.name}
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="Имя специальности"
+                />
+              </>
+            );
+          }}
         />
-        <FloatingTextInput id_name={"faculty"} placeholder="Факультет" />
+        <form.Field
+          name="facultyName"
+          children={(field) => {
+            return (
+              <>
+                <FloatingTextInput
+                  id_name={"faculty"}
+                  id={field.name}
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="Факультет"
+                />
+              </>
+            );
+          }}
+        />
         <div className="grid md:grid-cols-2 md:gap-6">
-          <FloatingTextInput
-            id_name={"budget_spot_count"}
-            placeholder="Бюджетных мест"
+          <form.Field
+            name="budgetSpots"
+            children={(field) => {
+              return (
+                <>
+                  <FloatingTextInput
+                    id_name={"budget_spot_count"}
+                    id={field.name}
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="Бюджетных мест"
+                  />
+                </>
+              );
+            }}
           />
-          <FloatingTextInput
-            id_name={"paid_spot_count"}
-            placeholder="Платных мест"
+          <form.Field
+            name="paidSpots"
+            children={(field) => {
+              return (
+                <>
+                  <FloatingTextInput
+                    id_name={"paid_spot_count"}
+                    id={field.name}
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="Платных мест"
+                  />
+                </>
+              );
+            }}
           />
         </div>
-        <ToggleSwitch
-          checked={military_switch}
-          label="Военизированная специальность"
-          onChange={setMilitarySwitch}
-        />
         <Button type="submit" className="mt-5 w-full">
-          Добавить
+          {!isEdit.isEdit ? "Добавить" : "Сохранить"}
         </Button>
       </form>
     </div>

@@ -73,8 +73,8 @@ const ApiProvider = ({ children }) => {
     return response ?? [];
   };
 
-  const getEntityById = async (entity_id, config) => {
-    let requestString = `/entity/records/${entity_id}`;
+  const getEntityById = async (entity, entity_id, config) => {
+    let requestString = `/` + entity + `/records/${entity_id}`;
 
     const { expand = [], fields = [] } = config;
 
@@ -92,12 +92,13 @@ const ApiProvider = ({ children }) => {
       requestString = requestString.concat("?", additions.join("&"));
     }
 
-    const { data } = axios.get(requestString, axiosConfig);
+    const { data } = await axios.get(requestString, axiosConfig);
+
     return data;
   };
 
-  const createEntity = async (requestData = {}, files = []) => {
-    let requestString = `/entity/records`;
+  const createEntity = async (entity, requestData = {}, files = []) => {
+    let requestString = `/` + entity + `/records`;
 
     const formData = new FormData();
 
@@ -120,8 +121,13 @@ const ApiProvider = ({ children }) => {
     return response;
   };
 
-  const updateEntity = async (entity_id, updateData = {}, files = []) => {
-    let requestString = `/entity/records/${entity_id}`;
+  const updateEntity = async (
+    entity,
+    entity_id,
+    updateData = {},
+    files = []
+  ) => {
+    let requestString = `/` + entity + `/records/${entity_id}`;
 
     const formData = new FormData();
 
@@ -140,12 +146,12 @@ const ApiProvider = ({ children }) => {
       }
     }
 
-    const { data } = axios.patch(requestString, formData, axiosConfig);
+    const { data } = await axios.patch(requestString, formData, axiosConfig);
     return data;
   };
 
-  const entityDelete = async (entity_id) => {
-    let requestString = `/entity/records/${entity_id}`;
+  const entityDelete = async (entity, entity_id) => {
+    let requestString = `/` + entity + `/records/${entity_id}`;
     const { data } = axios.delete(requestString, axiosConfig);
     return data;
   };
