@@ -20,6 +20,9 @@ const AuthProvider = ({ children }) => {
       setCookie("user-role", get(data, "record.role"), {
         expires: new Date(Date.now() + 12096e5),
       });
+      setCookie("user-id", get(data, "record.id"), {
+        expires: new Date(Date.now() + 12096e5),
+      });
     } catch {
       antNotification({
         type: "error",
@@ -41,10 +44,42 @@ const AuthProvider = ({ children }) => {
           role: 2,
         }
       );
+      await axios.post(
+        "http://127.0.0.1:8090/api/collections/Passport/records",
+        {
+          userId: data.id,
+          idNum: "",
+          series: "",
+          number: "",
+          nameLat: "",
+          nameKir: "",
+          sex: "male",
+          city: "",
+          birthDate: "2022-01-01 10:00:00.123Z",
+          givenDate: "2022-01-01 10:00:00.123Z",
+          givenByWhom: "",
+        }
+      );
+      await axios.post(
+        "http://127.0.0.1:8090/api/collections/EducationCertificate/records",
+        {
+          userId: data.id,
+          score: 0,
+          documentName: "",
+          scoolType: "",
+          schoolName: "",
+          releaseDate: "2022-01-01 10:00:00.123Z",
+          foreighnLanguage: "English",
+          educationType: "",
+        }
+      );
       setCookie("auth-token", get(data, "token"), {
         expires: new Date(Date.now() + 12096e5),
       });
       setCookie("user-role", get(data, "record.role"), {
+        expires: new Date(Date.now() + 12096e5),
+      });
+      setCookie("user-id", get(data, "record.id"), {
         expires: new Date(Date.now() + 12096e5),
       });
     } catch {

@@ -6,25 +6,36 @@ const employeeSlice = createSlice({
     employee: [],
   },
   reducers: {
+    getEmployees(state, action) {
+      state.employee = action.payload;
+    },
     addEmployee(state, action) {
-      console.log(state);
-      console.log(action);
-
       state.employee.push(action.payload);
     },
     removeEmployee(state, action) {
+      action.payload;
       state.employee = state.employee.filter(
-        (employee) => employee.id !== action.payload.id
+        (employee) => employee.id !== action.payload
       );
     },
     changeEmloyee(state, action) {
-      let changedEmployee = state.employee.find(
-        (employee) => employee.id === action.payload.id
-      );
-      changedEmployee = action.payload;
+      for (let index = 0; index < state.employee.length; index++) {
+        if (state.employee[index].id == action.payload.id) {
+          state.employee[index] = action.payload;
+          return;
+        }
+      }
+    },
+    blockEmloyee(state, action) {
+      for (let index = 0; index < state.employee.length; index++) {
+        if (state.employee[index].id == action.payload) {
+          state.employee[index].blocked = !state.employee[index].blocked;
+          return;
+        }
+      }
     },
   },
 });
-export const { addEmployee, removeEmployee, changeEmloyee } =
+export const { getEmployees, addEmployee, removeEmployee, changeEmloyee,blockEmloyee } =
   employeeSlice.actions;
 export default employeeSlice.reducer;

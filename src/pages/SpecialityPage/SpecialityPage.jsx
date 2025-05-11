@@ -47,6 +47,7 @@ export const SpecialityPage = () => {
     });
     dispatch(getSpecialities(spec_data.data.items));
   };
+
   const getOneSpec = async () => {
     const spec_data = await getEntityById("Speciality", isEdit.id, {
       expand: [],
@@ -54,7 +55,6 @@ export const SpecialityPage = () => {
     });
     form.reset(spec_data);
   };
-
   const form = useForm({
     defaultValues: {
       code: "",
@@ -68,15 +68,11 @@ export const SpecialityPage = () => {
       paidSpots: 0,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
       if (!isEdit.isEdit) {
         const entity = await createEntity("Speciality", value);
         dispatch(addSpeciality(entity.data));
-        console.log("created");
       } else {
         const entity = await updateEntity("Speciality", isEdit.id, value);
-        console.log("entity");
-        console.log(entity);
         dispatch(changeEdit(""));
         dispatch(changeSpeciality(entity));
         form.reset(form.defaultValues);

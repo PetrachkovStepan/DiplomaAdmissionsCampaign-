@@ -22,8 +22,6 @@ const specialitySlice = createSlice({
       for (let index = 0; index < state.speciality.length; index++) {
         if (state.speciality[index].id == action.payload.id) {
           state.speciality[index] = action.payload;
-          console.log("changedSpeciality");
-          console.log( state.speciality[index]);
           return
         }
       }

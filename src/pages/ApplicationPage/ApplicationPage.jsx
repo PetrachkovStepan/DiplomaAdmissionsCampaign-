@@ -1,33 +1,51 @@
 import { Button, Select } from "flowbite-react";
 
 import "../../reuse.css";
-import { TableContainer } from "@/components/TableContainer";
-import { FlowbiteIcons } from "flowbite-react-icons";
-import { AngleDown, AngleUp, TrashBin } from "flowbite-react-icons/outline";
-import { useState } from "react";
-// import { useAuth } from "@/provider/authProvider";
+import { useContext, useEffect, useState } from "react";
+import { ApplicationTable } from "@/components/tables/ApplicationTable";
+import { useDispatch, useSelector } from "react-redux";
+import { ApiContext } from "@/context/ApiContext";
 
+import { getChoices } from "./choiceSlice";
 export const ApplicationPage = () => {
-  // const { cookies } = useAuth();
   const [specFilter, setSpecFilter] = useState(true);
   const [buttonActive, setButtonActive] = useState(true);
+  const dispatch = useDispatch();
+  const choice = useSelector((state) => state.choice.choice);
+  const { getEntityById, getListOfEntities, createEntity } =
+    useContext(ApiContext);
 
-  const table_head = ["№", "Имя специальности", "Факультет"];
-  const spec_data = [
-    {
-      id: "boofId",
-      num: "1-39 01 01",
-      name: "Информационные системы и технологии обработки кала (в кабель менеджменте)",
-      faculty: "ФКП",
-    },
-    {
-      id: "boofId1",
-      num: "1-39 01 01",
-      name: "Информационные системы и технологии обработки кала (в кабель менеджменте)",
-      faculty: "ФКП",
-    },
-  ];
+  useEffect(() => {
+    getAllSpec();
+    getAllChoices();
+  }, []);
+  const getAllSpec = async () => {
+    const spec_data = await getListOfEntities("Speciality", {
+      expand: [],
+      fields: [],
+      page: -1,
+      perPage: -1,
+      sort: [],
+      filter: [],
+      skipTotal: -1,
+    });
+    // console.log(spec_data.data.items);
 
+    // dispatch(getSpecialities(spec_data.data.items));
+  };
+  const getAllChoices = async () => {
+    const choice_data = await getListOfEntities("ChoiceListItem", {
+      expand: ["userId", "specialityId"],
+      fields: [],
+      page: -1,
+      perPage: -1,
+      sort: ["priority"],
+      filter: [],
+      skipTotal: -1,
+    });
+    console.log(choice_data.data.items);
+    dispatch(getChoices(choice_data.data.items));
+  };
   return (
     <div className=" flex flex-col h-full gap-4">
       <form className=" flex w-full gap-4 flex-row items-center justify-center">
@@ -36,6 +54,7 @@ export const ApplicationPage = () => {
           onChange={(e) => {
             if (e.target.value == "blank") {
               setSpecFilter(true);
+              setButtonActive(true);
             } else {
               setSpecFilter(false);
             }
@@ -66,26 +85,7 @@ export const ApplicationPage = () => {
           Добавить
         </Button>
       </form>
-      <TableContainer
-        table_head={table_head}
-        data={spec_data}
-        editing={true}
-        buttons={
-          <FlowbiteIcons size={16}>
-            <div className="flex flex-rowitems-center gap-4">
-              <Button outline={true} size="xs">
-                <AngleUp />
-              </Button>
-              <Button outline={true} size="xs">
-                <AngleDown />
-              </Button>
-              <Button size="xs" outline={true}>
-                <TrashBin />
-              </Button>
-            </div>
-          </FlowbiteIcons>
-        }
-      />
+      <ApplicationTable data={choice} />
       <Button className="">Скaчать заявление</Button>
     </div>
   );

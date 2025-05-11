@@ -6,9 +6,10 @@ import "../reuse.css";
 import { useCookies } from "react-cookie";
 
 export const MainHeader = () => {
-    const [cookies, setCookie] = useCookies(["auth-token", "user-role"]);
+  const [cookies, setCookie] = useCookies(["auth-token", "user-role"]);
 
   const headerSwitch = (role) => {
+
     switch (role) {
       case 0:
         return (
