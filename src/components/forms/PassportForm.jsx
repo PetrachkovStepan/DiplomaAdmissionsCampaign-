@@ -7,14 +7,12 @@ import { FloatingTextInput } from "@/components/FloatingTextInput";
 import "../../reuse.css";
 
 import { useContext, useEffect } from "react";
-import { useCookies } from "react-cookie";
 import { useForm } from "@tanstack/react-form";
 import { ApiContext } from "@/context/ApiContext";
 import { useNavigate } from "@tanstack/react-router";
 
-export const PassportForm = ({ children }) => {
+export const PassportForm = ({ user_id, children }) => {
   const navigate = useNavigate({ from: "/" });
-  const [cookies, setCookie] = useCookies(["user-id"]);
   const { getListOfEntities, updateEntity } = useContext(ApiContext);
 
   useEffect(() => {
@@ -28,7 +26,7 @@ export const PassportForm = ({ children }) => {
       page: -1,
       perPage: -1,
       sort: [],
-      filter: ['userId="' + cookies["user-id"] + '"'],
+      filter: ['userId="' + user_id + '"'],
       skipTotal: -1,
     });
     const education = await getListOfEntities("EducationCertificate", {
@@ -37,7 +35,7 @@ export const PassportForm = ({ children }) => {
       page: -1,
       perPage: -1,
       sort: [],
-      filter: ['userId="' + cookies["user-id"] + '"'],
+      filter: ['userId="' + user_id + '"'],
       skipTotal: -1,
     });
     form.reset({
@@ -78,7 +76,7 @@ export const PassportForm = ({ children }) => {
         value.education.id,
         value.education
       );
-      navigate({to:"/application"});
+      navigate({ to: "/application" });
     },
   });
   return (

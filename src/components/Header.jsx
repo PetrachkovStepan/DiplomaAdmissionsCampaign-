@@ -11,7 +11,7 @@ export const MainHeader = () => {
   const headerSwitch = (role) => {
 
     switch (role) {
-      case 0:
+      case 1:
         return (
           <>
             <Navbar.Link href="/speciality">Специальности</Navbar.Link>
@@ -19,7 +19,7 @@ export const MainHeader = () => {
             <Navbar.Link href="/admissionList">Списки</Navbar.Link>
           </>
         );
-      case 1:
+      case 0:
         return (
           <>
             <Navbar.Link href="/employee">Работники</Navbar.Link>

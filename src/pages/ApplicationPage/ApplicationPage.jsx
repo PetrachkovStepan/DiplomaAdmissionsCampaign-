@@ -6,19 +6,56 @@ import { ApplicationTable } from "@/components/tables/ApplicationTable";
 import { useDispatch, useSelector } from "react-redux";
 import { ApiContext } from "@/context/ApiContext";
 
-import { getChoices } from "./choiceSlice";
+import { addChoices, getChoices } from "./choiceSlice";
+import { useCookies } from "react-cookie";
+import { printApplicationPDF } from "@/utils/print/printPDF";
 export const ApplicationPage = () => {
+  const [cookies, setCookie] = useCookies(["user-id"]);
+  const [faculty, setFaculty] = useState("Факультет");
+  const [speciality, setSpeciality] = useState("Специальность");
   const [specFilter, setSpecFilter] = useState(true);
-  const [buttonActive, setButtonActive] = useState(true);
+  const [specFilterData, setSpecFilterData] = useState([
+    { name: "Специальность", facultyName: "Факультет" },
+  ]);
+  const [facultyFilterData, setFacultyFilterData] = useState(["Факультет"]);
   const dispatch = useDispatch();
   const choice = useSelector((state) => state.choice.choice);
-  const { getEntityById, getListOfEntities, createEntity } =
+  const { getListOfEntities, createEntity, getEntityById, updateEntity } =
     useContext(ApiContext);
 
   useEffect(() => {
     getAllSpec();
     getAllChoices();
   }, []);
+  const handleAddChoiceItem = async () => {
+    const spec_data = await getListOfEntities("Speciality", {
+      expand: [],
+      fields: [],
+      page: -1,
+      perPage: -1,
+      sort: [],
+      filter: ['name="' + speciality + '"', 'facultyName="' + faculty + '"'],
+      skipTotal: -1,
+    });
+    const choise_data = await createEntity("ChoiceListItem", {
+      userId: cookies["user-id"],
+      specialityId: spec_data.data.items[0].id,
+      priority: choice.length,
+    });
+    dispatch(
+      addChoices(
+        await getEntityById("ChoiceListItem", choise_data.data.id, {
+          expand: ["userId", "specialityId"],
+          fields: [],
+          page: -1,
+          perPage: -1,
+          sort: ["priority"],
+          filter: [],
+          skipTotal: -1,
+        })
+      )
+    );
+  };
   const getAllSpec = async () => {
     const spec_data = await getListOfEntities("Speciality", {
       expand: [],
@@ -29,9 +66,23 @@ export const ApplicationPage = () => {
       filter: [],
       skipTotal: -1,
     });
-    // console.log(spec_data.data.items);
-
-    // dispatch(getSpecialities(spec_data.data.items));
+    const facultyDefault = ["Факультет"];
+    const specDefault = [{ name: "Специальность", facultyName: "Факультет" }];
+    setFacultyFilterData(
+      Array.from(
+        new Set([
+          ...facultyDefault,
+          ...spec_data.data.items.map(({ facultyName }) => facultyName),
+        ])
+      )
+    );
+    setSpecFilterData([
+      ...specDefault,
+      ...spec_data.data.items.map(({ name, facultyName }) => ({
+        name,
+        facultyName,
+      })),
+    ]);
   };
   const getAllChoices = async () => {
     const choice_data = await getListOfEntities("ChoiceListItem", {
@@ -43,50 +94,67 @@ export const ApplicationPage = () => {
       filter: [],
       skipTotal: -1,
     });
-    console.log(choice_data.data.items);
     dispatch(getChoices(choice_data.data.items));
+  };
+  const getEnrolled = async () => {
+    await updateEntity("users", cookies["user-id"], { enrollled: true });
   };
   return (
     <div className=" flex flex-col h-full gap-4">
-      <form className=" flex w-full gap-4 flex-row items-center justify-center">
+      <article className=" flex w-full gap-4 flex-row items-center justify-center">
         <Select
           id={"spec_num"}
           onChange={(e) => {
-            if (e.target.value == "blank") {
+            setFaculty(e.target.value);
+            if (e.target.value == "Факультет") {
               setSpecFilter(true);
-              setButtonActive(true);
             } else {
               setSpecFilter(false);
             }
           }}
         >
-          <option value={"blank"}>Факультет</option>
-          <option value={"ФКП"}>ФКП</option>
-          <option value={"ФРЭ"}>ФРЭ</option>
+          {facultyFilterData.map((item, i) => (
+            <option key={i} value={item}>
+              {item}
+            </option>
+          ))}
         </Select>
         <Select
           id={"spec_name"}
           disabled={specFilter}
           onChange={(e) => {
-            if (e.target.value == "blank") {
-              setButtonActive(true);
-            } else {
-              setButtonActive(false);
-            }
+            setSpeciality(e.target.value);
           }}
         >
-          <option value={"blank"}>Cпециальность</option>
-          <option value={"1"}>специальность 1</option>
-          <option value={"2"}>специальность 2</option>
-          <option value={"3"}>специальность 3</option>
-          <option value={"4"}>специальность 4</option>
+          {[
+            ...[{ name: "Специальность", facultyName: "Факультет" }],
+            ...specFilterData.filter((item) => item.facultyName === faculty),
+          ].map((item, i) => (
+            <option key={i} value={item.name}>
+              {item.name}
+            </option>
+          ))}
         </Select>
-        <Button type="submit" disabled={buttonActive}>
+        <Button
+          disabled={
+            speciality == "Специальность" ||
+            faculty == "Факультет" ||
+            choice.length > 17
+          }
+          onClick={handleAddChoiceItem}
+        >
           Добавить
         </Button>
-      </form>
+      </article>
       <ApplicationTable data={choice} />
-      <Button className="">Скaчать заявление</Button>
+      <Button
+        onClick={() => {
+          printApplicationPDF(choice);
+        }}
+      >
+        Скaчать заявление
+      </Button>
+      <Button onClick={getEnrolled}>Подать заявление</Button>
     </div>
   );
 };
