@@ -37,7 +37,7 @@ export const AuthPage = () => {
   return (
     <>
       <div className="w-full h-full grid place-items-center relative">
-        <div className="max-w-[90vw] max-h-[70vh] min-w-[30vw] min-h-[40vh] backdrop-blur-md bg-[#7171752d] flex flex-col p-5 items-center gap-6">
+        <div className="max-w-[90vw] max-h-[70vh] min-w-[30vw] min-h-[40vh] backdrop-blur-md flex flex-col p-5 items-center gap-6">
           <h1 className="text-xl">Электронный абитуриент</h1>
           <form
             className="w-full"
@@ -48,7 +48,7 @@ export const AuthPage = () => {
             }}
           >
             <div
-              className="mb-5 cursor-pointer"
+              className="mb-5 cursor-pointer text-[#0e7490]"
               onClick={() => setIsNewUser((prev) => !prev)}
             >
               {!isNewUser ? "Нет аккаунта?" : "Уже есть аккаунт?"}{" "}
@@ -71,7 +71,7 @@ export const AuthPage = () => {
                       <>
                         <FormInput
                           id={field.name}
-                          title={"ФИО"}
+                          placeholder={"ФИО"}
                           errorMessage={field.state.meta.errors.join(", ")}
                           name={field.name}
                           value={field.state.value}
@@ -99,7 +99,7 @@ export const AuthPage = () => {
                     <>
                       <FormInput
                         id={field.name}
-                        title={"Email"}
+                        placeholder={"Email"}
                         errorMessage={field.state.meta.errors.join(", ")}
                         name={field.name}
                         value={field.state.value}
@@ -117,7 +117,7 @@ export const AuthPage = () => {
                     !value
                       ? "Обязательное поле"
                       : value.length < 8
-                        ? "Имя должно иметь минимум 8 символов"
+                        ? "Пароль должен иметь минимум 8 символов"
                         : undefined,
                 }}
                 children={(field) => {
@@ -127,7 +127,7 @@ export const AuthPage = () => {
                       <FormInput
                         id={field.name}
                         inputType="password"
-                        title={"Пароль"}
+                        placeholder={"Пароль"}
                         errorMessage={field.state.meta.errors.join(", ")}
                         name={field.name}
                         value={field.state.value}

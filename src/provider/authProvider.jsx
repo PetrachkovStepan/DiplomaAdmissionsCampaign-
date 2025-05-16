@@ -86,7 +86,7 @@ const AuthProvider = ({ children }) => {
       antNotification({
         type: "error",
         customTitle: "Failure",
-        customMessage: "User with such email already exists",
+        customMessage: "Пользователь с таким email уже существует",
       });
     }
   };

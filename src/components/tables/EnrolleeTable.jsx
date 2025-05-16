@@ -41,7 +41,7 @@ export const EnrolleeTable = ({ data }) => {
                   });
                 }}
               >
-                Рассмотреть заявку
+                Рассмотреть
               </Button>
             </TableCell>
           </TableRow>

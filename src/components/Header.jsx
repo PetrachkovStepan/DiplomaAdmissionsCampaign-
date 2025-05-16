@@ -4,9 +4,11 @@ import { Navbar } from "flowbite-react";
 
 import "../reuse.css";
 import { useCookies } from "react-cookie";
+import { useNavigate } from "@tanstack/react-router";
 
 export const MainHeader = () => {
   const [cookies, setCookie] = useCookies(["auth-token", "user-role"]);
+    const navigate = useNavigate({ from: "/" });
 
   const headerSwitch = (role) => {
 
@@ -28,7 +30,7 @@ export const MainHeader = () => {
       default:
         return (
           <>
-            <Navbar.Link href="/">Личная информация</Navbar.Link>
+            <Navbar.Link href="/home">Личная информация</Navbar.Link>
             <Navbar.Link href="/application">Заявление</Navbar.Link>
           </>
         );
@@ -47,6 +49,7 @@ export const MainHeader = () => {
       <div className="flex md:order-2">
         <Button
           onClick={() => {
+            navigate({to:"/"})
             setCookie("auth-token", null);
           }}
         >

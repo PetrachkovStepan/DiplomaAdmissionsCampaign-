@@ -10,7 +10,7 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 
 import { routeTree } from "./routeTree.gen";
 import ApiProvider from "./provider/ApiProvider";
-import AuthProvider from "./provider/AuthProvider";
+import AuthProvider from "./provider/authProvider";
 
 import "./input.css";
 

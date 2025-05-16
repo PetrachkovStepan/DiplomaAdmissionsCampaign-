@@ -14,3 +14,11 @@ export const validateSpecCode = (code) => {
     .toLowerCase()
     .match(/^(\d{1,2}(-\d{2})*)$/);
 };
+export const validatePhoneNumber = (phoneNumber) => {
+  const regex = /^\+375\d{9}$/;
+  return regex.test(phoneNumber);
+};
+export const validateInteger = (input) => {
+  const regex = /^[1-9]\d*$/;
+  return regex.test(input);
+};

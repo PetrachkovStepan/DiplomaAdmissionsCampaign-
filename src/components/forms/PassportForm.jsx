@@ -3,16 +3,18 @@
 
 import { Button, Radio, Label, Datepicker } from "flowbite-react";
 
-import { FloatingTextInput } from "@/components/FloatingTextInput";
 import "../../reuse.css";
 
 import { useContext, useEffect } from "react";
 import { useForm } from "@tanstack/react-form";
 import { ApiContext } from "@/context/ApiContext";
 import { useNavigate } from "@tanstack/react-router";
+import { useCookies } from "react-cookie";
+import FormInput from "@/universalComponents/FormInput";
 
 export const PassportForm = ({ user_id, children }) => {
-  const navigate = useNavigate({ from: "/" });
+  const navigate = useNavigate({ from: "/home" });
+  const [cookies, setCookie] = useCookies(["user-id"]);
   const { getListOfEntities, updateEntity } = useContext(ApiContext);
 
   useEffect(() => {
@@ -81,7 +83,7 @@ export const PassportForm = ({ user_id, children }) => {
   });
   return (
     <form
-      className="grid grid-cols-2 gap-4"
+      className="flex flex-col md:grid grid-cols-2 gap-4"
       onSubmit={(event) => {
         event.preventDefault();
         form.handleSubmit();
@@ -93,13 +95,25 @@ export const PassportForm = ({ user_id, children }) => {
         </div>
         <form.Field
           name="passport"
+          validators={{
+            onChange: ({ value }) => {
+              return !value.nameKir
+                ? "Обязательное поле"
+                : value.nameKir.length < 3
+                  ? "ФИО должно иметь минимум 3 символа"
+                  : undefined;
+            },
+          }}
           children={(field) => {
             return (
               <>
-                <FloatingTextInput
+                <FormInput
                   id_name={"passport.nameKir"}
                   id={field.name}
+                  placeholder="ФИО кириллицей"
                   value={field.state.value.nameKir}
+                  isRequired={true}
+                  errorMessage={field.state.meta.errors.join(", ")}
                   onChange={(e) => {
                     const newData = {
                       ...field.state.value,
@@ -107,7 +121,6 @@ export const PassportForm = ({ user_id, children }) => {
                     };
                     field.handleChange(newData);
                   }}
-                  placeholder="ФИО кириллицей"
                 />
               </>
             );
@@ -115,12 +128,22 @@ export const PassportForm = ({ user_id, children }) => {
         />
         <form.Field
           name="passport"
+          validators={{
+            onChange: ({ value }) => {
+              return !value.nameLat
+                ? "Обязательное поле"
+                : value.nameLat.length < 3
+                  ? "ФИО должно иметь минимум 3 символа"
+                  : undefined;
+            },
+          }}
           children={(field) => {
             return (
               <>
-                <FloatingTextInput
+                <FormInput
                   id_name={"passport.nameLat"}
                   id={field.name}
+                  isRequired={true}
                   value={field.state.value.nameLat}
                   onChange={(e) => {
                     const newData = {
@@ -137,12 +160,22 @@ export const PassportForm = ({ user_id, children }) => {
         />
         <form.Field
           name="passport"
+          validators={{
+            onChange: ({ value }) => {
+              return !value.series
+                ? "Обязательное поле"
+                : value.series.length != 2
+                  ? "Неверный формат"
+                  : undefined;
+            },
+          }}
           children={(field) => {
             return (
               <>
-                <FloatingTextInput
+                <FormInput
                   id_name={"passport.series"}
                   id={field.name}
+                  isRequired={true}
                   value={field.state.value.series}
                   onChange={(e) => {
                     const newData = {
@@ -159,12 +192,22 @@ export const PassportForm = ({ user_id, children }) => {
         />
         <form.Field
           name="passport"
+          validators={{
+            onChange: ({ value }) => {
+              return !value.number
+                ? "Обязательное поле"
+                : value.number.length != 7
+                  ? "Номер паспорта должен иметь 7 символов"
+                  : undefined;
+            },
+          }}
           children={(field) => {
             return (
               <>
-                <FloatingTextInput
+                <FormInput
                   id_name={"passport.number"}
                   id={field.name}
+                  isRequired={true}
                   value={field.state.value.number}
                   onChange={(e) => {
                     const newData = {
@@ -184,9 +227,10 @@ export const PassportForm = ({ user_id, children }) => {
           children={(field) => {
             return (
               <>
-                <FloatingTextInput
+                <FormInput
                   id_name={"passport.idNum"}
                   id={field.name}
+                  isRequired={true}
                   value={field.state.value.idNum}
                   onChange={(e) => {
                     const newData = {
@@ -206,9 +250,10 @@ export const PassportForm = ({ user_id, children }) => {
           children={(field) => {
             return (
               <>
-                <FloatingTextInput
+                <FormInput
                   id_name={"passport.givenByWhom"}
                   id={field.name}
+                  isRequired={true}
                   value={field.state.value.givenByWhom}
                   onChange={(e) => {
                     const newData = {
@@ -332,9 +377,10 @@ export const PassportForm = ({ user_id, children }) => {
           children={(field) => {
             return (
               <>
-                <FloatingTextInput
+                <FormInput
                   id_name={"education.documentName"}
                   id={field.name}
+                  isRequired={true}
                   value={field.state.value.documentName}
                   onChange={(e) => {
                     const newData = {
@@ -354,9 +400,10 @@ export const PassportForm = ({ user_id, children }) => {
           children={(field) => {
             return (
               <>
-                <FloatingTextInput
+                <FormInput
                   id_name={"education.educationType"}
                   id={field.name}
+                  isRequired={true}
                   value={field.state.value.educationType}
                   onChange={(e) => {
                     const newData = {
@@ -376,9 +423,10 @@ export const PassportForm = ({ user_id, children }) => {
           children={(field) => {
             return (
               <>
-                <FloatingTextInput
+                <FormInput
                   id_name={"education.scoolType"}
                   id={field.name}
+                  isRequired={true}
                   value={field.state.value.scoolType}
                   onChange={(e) => {
                     const newData = {
@@ -398,9 +446,10 @@ export const PassportForm = ({ user_id, children }) => {
           children={(field) => {
             return (
               <>
-                <FloatingTextInput
+                <FormInput
                   id_name={"education.schoolName"}
                   id={field.name}
+                  isRequired={true}
                   value={field.state.value.schoolName}
                   onChange={(e) => {
                     const newData = {
@@ -420,9 +469,10 @@ export const PassportForm = ({ user_id, children }) => {
           children={(field) => {
             return (
               <>
-                <FloatingTextInput
+                <FormInput
                   id_name={"education.foreighnLanguage"}
                   id={field.name}
+                  isRequired={true}
                   value={field.state.value.foreighnLanguage}
                   onChange={(e) => {
                     const newData = {
@@ -464,9 +514,39 @@ export const PassportForm = ({ user_id, children }) => {
         </div>
       </div>
       {children}
-      <Button type="submit" className="my-5 w-full col-span-2" size="xl">
-        Продолжить
-      </Button>
+      {cookies["user-role"] == "2" ? (
+        <>
+          <Button type="submit" className="my-5 w-full col-span-2" size="xl">
+            Продолжить
+          </Button>
+        </>
+      ) : (
+        <>
+          <Button
+            type="submit"
+            className="mt-5 w-full col-span-2"
+            size="xl"
+            onSubmit={() => {
+              // e.preventDefault();
+              // navigate("/admissionList");
+            }}
+          >
+            Одобрить заявку
+          </Button>
+          <Button
+            type="submit"
+            className="mb-5 w-full col-span-2"
+            size="xl"
+            color="red"
+            onSubmit={() => {
+              // e.preventDefault();
+              // navigate("/admissionList");
+            }}
+          >
+            Отклонить заявку
+          </Button>
+        </>
+      )}
     </form>
   );
 };

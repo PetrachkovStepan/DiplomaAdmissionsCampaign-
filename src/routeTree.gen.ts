@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as SpecialityImport } from './routes/speciality'
+import { Route as HomeImport } from './routes/home'
 import { Route as EnrolleeprofileImport } from './routes/enrolleeprofile'
 import { Route as EnrolleeImport } from './routes/enrollee'
 import { Route as EmployeeImport } from './routes/employee'
@@ -24,6 +25,12 @@ import { Route as IndexImport } from './routes/index'
 const SpecialityRoute = SpecialityImport.update({
   id: '/speciality',
   path: '/speciality',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const HomeRoute = HomeImport.update({
+  id: '/home',
+  path: '/home',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -109,6 +116,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnrolleeprofileImport
       parentRoute: typeof rootRoute
     }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeImport
+      parentRoute: typeof rootRoute
+    }
     '/speciality': {
       id: '/speciality'
       path: '/speciality'
@@ -128,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/employee': typeof EmployeeRoute
   '/enrollee': typeof EnrolleeRoute
   '/enrolleeprofile': typeof EnrolleeprofileRoute
+  '/home': typeof HomeRoute
   '/speciality': typeof SpecialityRoute
 }
 
@@ -138,6 +153,7 @@ export interface FileRoutesByTo {
   '/employee': typeof EmployeeRoute
   '/enrollee': typeof EnrolleeRoute
   '/enrolleeprofile': typeof EnrolleeprofileRoute
+  '/home': typeof HomeRoute
   '/speciality': typeof SpecialityRoute
 }
 
@@ -149,6 +165,7 @@ export interface FileRoutesById {
   '/employee': typeof EmployeeRoute
   '/enrollee': typeof EnrolleeRoute
   '/enrolleeprofile': typeof EnrolleeprofileRoute
+  '/home': typeof HomeRoute
   '/speciality': typeof SpecialityRoute
 }
 
@@ -161,6 +178,7 @@ export interface FileRouteTypes {
     | '/employee'
     | '/enrollee'
     | '/enrolleeprofile'
+    | '/home'
     | '/speciality'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -170,6 +188,7 @@ export interface FileRouteTypes {
     | '/employee'
     | '/enrollee'
     | '/enrolleeprofile'
+    | '/home'
     | '/speciality'
   id:
     | '__root__'
@@ -179,6 +198,7 @@ export interface FileRouteTypes {
     | '/employee'
     | '/enrollee'
     | '/enrolleeprofile'
+    | '/home'
     | '/speciality'
   fileRoutesById: FileRoutesById
 }
@@ -190,6 +210,7 @@ export interface RootRouteChildren {
   EmployeeRoute: typeof EmployeeRoute
   EnrolleeRoute: typeof EnrolleeRoute
   EnrolleeprofileRoute: typeof EnrolleeprofileRoute
+  HomeRoute: typeof HomeRoute
   SpecialityRoute: typeof SpecialityRoute
 }
 
@@ -200,6 +221,7 @@ const rootRouteChildren: RootRouteChildren = {
   EmployeeRoute: EmployeeRoute,
   EnrolleeRoute: EnrolleeRoute,
   EnrolleeprofileRoute: EnrolleeprofileRoute,
+  HomeRoute: HomeRoute,
   SpecialityRoute: SpecialityRoute,
 }
 
@@ -219,6 +241,7 @@ export const routeTree = rootRoute
         "/employee",
         "/enrollee",
         "/enrolleeprofile",
+        "/home",
         "/speciality"
       ]
     },
@@ -239,6 +262,9 @@ export const routeTree = rootRoute
     },
     "/enrolleeprofile": {
       "filePath": "enrolleeprofile.jsx"
+    },
+    "/home": {
+      "filePath": "home.jsx"
     },
     "/speciality": {
       "filePath": "speciality.jsx"

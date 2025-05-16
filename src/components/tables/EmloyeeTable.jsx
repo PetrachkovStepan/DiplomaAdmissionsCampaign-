@@ -19,25 +19,40 @@ import {
   blockEmloyee,
 } from "@/pages/EmployeePage/employeeSlice";
 import { changeEdit } from "@/store/globalSlice/isEditSlice";
+import { useCookies } from "react-cookie";
+import { notification } from "antd";
 
 export const EmloyeeTable = ({ data }) => {
+  const [cookies, setCookie] = useCookies(["user-id"]);
   const dispatch = useDispatch();
   const { updateEntity } = useContext(ApiContext);
   const { entityDelete } = useContext(ApiContext);
   const deleteHandle = async (id, infoId) => {
-    entityDelete("users", id);
-    entityDelete("UniversityEmployeeInfo", infoId);
-    console.log(id, infoId);
-    
-    dispatch(removeEmployee(infoId));
+    if (cookies["user-id"] == id) {
+      notification["error"]({
+        message: "Ошибка",
+        description: "Нельзя удалить себя",
+      });
+    } else {
+      entityDelete("users", id);
+      entityDelete("UniversityEmployeeInfo", infoId);
+      dispatch(removeEmployee(infoId));
+    }
   };
   const updateHandle = (id) => {
     dispatch(changeEdit(id));
   };
-  const blockHandle = async (id, blocked) => {
-    await updateEntity("UniversityEmployeeInfo", id, { blocked: !blocked });
+  const blockHandle = async (usedId, id, blocked) => {
+    if (cookies["user-id"] == usedId) {
+      notification["error"]({
+        message: "Ошибка",
+        description: "Нельзя заблокировать себя",
+      });
+    } else {
+      await updateEntity("UniversityEmployeeInfo", id, { blocked: !blocked });
 
-    dispatch(blockEmloyee(id));
+      dispatch(blockEmloyee(id));
+    }
   };
   return (
     <Table>
@@ -71,7 +86,7 @@ export const EmloyeeTable = ({ data }) => {
                   outline={true}
                   size="xs"
                   onClick={() => {
-                    blockHandle(item.id, item.blocked);
+                    blockHandle(item.expand.userId.id, item.id, item.blocked);
                   }}
                 >
                   {item.blocked ? <Lock /> : <LockOpen />}

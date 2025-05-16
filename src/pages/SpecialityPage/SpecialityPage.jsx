@@ -6,9 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useForm } from "@tanstack/react-form";
 import { ApiContext } from "@/context/ApiContext";
-import { validateSpecCode } from "@/utils/validators";
+import { validateInteger, validateSpecCode } from "@/utils/validators";
 import { changeEdit } from "@/store/globalSlice/isEditSlice";
-import { FloatingTextInput } from "@/components/FloatingTextInput";
 import { SpecialityTable } from "@/components/tables/SpecialityTable";
 
 import {
@@ -18,6 +17,7 @@ import {
 } from "./specialitySlice";
 
 import "../../reuse.css";
+import FormInput from "@/universalComponents/FormInput";
 
 export const SpecialityPage = () => {
   const dispatch = useDispatch();
@@ -81,10 +81,12 @@ export const SpecialityPage = () => {
   });
 
   return (
-    <div className=" flex flex-row h-full">
-      <SpecialityTable data={speciality} />
+    <div className=" flex flex-col-reverse lg:flex-row  h-full">
+      <div className="flex h-full overflow-x-auto mt-5 lg:mt-0 shadow-lg">
+        <SpecialityTable data={speciality} />
+      </div>
       <form
-        className="max-w-md mx-auto"
+        className=" mx-5"
         onSubmit={(event) => {
           event.preventDefault();
           form.handleSubmit();
@@ -94,14 +96,20 @@ export const SpecialityPage = () => {
           name="code"
           validators={{
             onChange: ({ value }) =>
-              !validateSpecCode(value) ? "Неверный формат" : undefined,
+              !value
+                ? "Обязательное поле"
+                : !validateSpecCode(value)
+                  ? "Неверный формат"
+                  : undefined,
           }}
           children={(field) => {
             return (
               <>
-                <FloatingTextInput
+                <FormInput
                   id_name={"code"}
                   id={field.name}
+                  isRequired={true}
+                  errorMessage={field.state.meta.errors.join(", ")}
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                   placeholder="Номер специальности"
@@ -112,12 +120,22 @@ export const SpecialityPage = () => {
         />
         <form.Field
           name="name"
+          validators={{
+            onChange: ({ value }) =>
+              !value
+                ? "Обязательное поле"
+                : value.length < 2
+                  ? "Имя должно иметь минимум 2 символа"
+                  : undefined,
+          }}
           children={(field) => {
             return (
               <>
-                <FloatingTextInput
+                <FormInput
                   id_name={"spec_name"}
                   id={field.name}
+                  isRequired={true}
+                  errorMessage={field.state.meta.errors.join(", ")}
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                   placeholder="Имя специальности"
@@ -128,12 +146,22 @@ export const SpecialityPage = () => {
         />
         <form.Field
           name="facultyName"
+          validators={{
+            onChange: ({ value }) =>
+              !value
+                ? "Обязательное поле"
+                : value.length < 3
+                  ? "Факультет должен иметь минимум 3 символа"
+                  : undefined,
+          }}
           children={(field) => {
             return (
               <>
-                <FloatingTextInput
+                <FormInput
                   id_name={"faculty"}
                   id={field.name}
+                  isRequired={true}
+                  errorMessage={field.state.meta.errors.join(", ")}
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                   placeholder="Факультет"
@@ -145,12 +173,22 @@ export const SpecialityPage = () => {
         <div className="grid md:grid-cols-2 md:gap-6">
           <form.Field
             name="budgetSpots"
+            validators={{
+              onChange: ({ value }) =>
+                !value
+                  ? "Обязательное поле"
+                  : !validateInteger(value)
+                    ? "Неверный формат"
+                    : undefined,
+            }}
             children={(field) => {
               return (
                 <>
-                  <FloatingTextInput
+                  <FormInput
                     id_name={"budget_spot_count"}
                     id={field.name}
+                    isRequired={true}
+                    errorMessage={field.state.meta.errors.join(", ")}
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                     placeholder="Бюджетных мест"
@@ -161,12 +199,22 @@ export const SpecialityPage = () => {
           />
           <form.Field
             name="paidSpots"
+            validators={{
+              onChange: ({ value }) =>
+                !value
+                  ? "Обязательное поле"
+                  : !validateInteger(value)
+                    ? "Неверный формат"
+                    : undefined,
+            }}
             children={(field) => {
               return (
                 <>
-                  <FloatingTextInput
+                  <FormInput
                     id_name={"paid_spot_count"}
                     id={field.name}
+                    isRequired={true}
+                    errorMessage={field.state.meta.errors.join(", ")}
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                     placeholder="Платных мест"
