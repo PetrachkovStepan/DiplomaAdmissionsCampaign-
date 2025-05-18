@@ -6,9 +6,11 @@ import { ApiContext } from "@/context/ApiContext";
 import { useDispatch, useSelector } from "react-redux";
 import { UserExamTable } from "../tables/UserExamTable";
 import { addExams, getExams } from "@/pages/EnrolleeProfilePage/examSlice";
+import { hasDuplicateSubject } from "@/utils/validators";
+import { notification } from "antd";
 
 export const ExamSertificateForm = ({ user_id }) => {
-  const [subject, setSubject] = useState("");
+  const [subject, setSubject] = useState("blank");
   const [mark, setMark] = useState(0);
   const [score, setScore] = useState(0);
 
@@ -21,6 +23,21 @@ export const ExamSertificateForm = ({ user_id }) => {
   }, []);
 
   const createCertificate = async () => {
+    console.log(hasDuplicateSubject(exam, { subject: subject }));
+    if (subject == "blank") {
+      notification["error"]({
+        message: "Ошибка",
+        description: "Выберите предмет",
+      });
+      return;
+    }
+    if (hasDuplicateSubject(exam, { subject: subject })) {
+      notification["error"]({
+        message: "Ошибка",
+        description: "Экзамен с таким предметом уже есть",
+      });
+      return;
+    }
     if (exam.length < 3) {
       const data = await createEntity("ExamCertificate", {
         userId: user_id,

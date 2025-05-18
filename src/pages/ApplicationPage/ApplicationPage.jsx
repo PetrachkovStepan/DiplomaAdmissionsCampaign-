@@ -9,7 +9,11 @@ import { ApiContext } from "@/context/ApiContext";
 import { addChoices, getChoices } from "./choiceSlice";
 import { useCookies } from "react-cookie";
 import { printApplicationPDF } from "@/utils/print/printPDF";
+import { containsSpecById } from "@/utils/validators";
+import { notification } from "antd";
+import { useNavigate } from "@tanstack/react-router";
 export const ApplicationPage = () => {
+  const navigate = useNavigate({from: "/application"})
   const [cookies, setCookie] = useCookies(["user-id"]);
   const [faculty, setFaculty] = useState("Факультет");
   const [speciality, setSpeciality] = useState("Специальность");
@@ -37,6 +41,13 @@ export const ApplicationPage = () => {
       filter: ['name="' + speciality + '"', 'facultyName="' + faculty + '"'],
       skipTotal: -1,
     });
+    if (containsSpecById(choice, spec_data.data.items[0].id)) {
+      notification["error"]({
+        message: "Ошибка",
+        description: "Эта специальность уже добавлена",
+      });
+      return;
+    }
     const choise_data = await createEntity("ChoiceListItem", {
       userId: cookies["user-id"],
       specialityId: spec_data.data.items[0].id,
@@ -91,13 +102,14 @@ export const ApplicationPage = () => {
       page: -1,
       perPage: -1,
       sort: ["priority"],
-      filter: [],
+      filter: ["userId='" + cookies["user-id"] + "'"],
       skipTotal: -1,
     });
     dispatch(getChoices(choice_data.data.items));
   };
   const getEnrolled = async () => {
     await updateEntity("users", cookies["user-id"], { enrollled: true });
+    navigate({to:"/"})
   };
   return (
     <div className=" flex flex-col h-full gap-4">

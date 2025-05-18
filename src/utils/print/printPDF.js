@@ -8,8 +8,7 @@ export const printApplicationPDF = (array) => {
   for (let index = 0; index < array.length; index++) {
     outpurArray +=
       "<p>" +
-      index +
-      1 +
+      (index + 1) +
       ". Специальность: " +
       array[index].expand.specialityId.name +
       ", Факультет: " +

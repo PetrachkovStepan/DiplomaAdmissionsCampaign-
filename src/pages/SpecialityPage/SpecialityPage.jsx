@@ -6,7 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useForm } from "@tanstack/react-form";
 import { ApiContext } from "@/context/ApiContext";
-import { validateInteger, validateSpecCode } from "@/utils/validators";
+import {
+  specCheck,
+  validateInteger,
+  validateSpecCode,
+} from "@/utils/validators";
 import { changeEdit } from "@/store/globalSlice/isEditSlice";
 import { SpecialityTable } from "@/components/tables/SpecialityTable";
 
@@ -18,6 +22,7 @@ import {
 
 import "../../reuse.css";
 import FormInput from "@/universalComponents/FormInput";
+import { notification } from "antd";
 
 export const SpecialityPage = () => {
   const dispatch = useDispatch();
@@ -60,14 +65,29 @@ export const SpecialityPage = () => {
       code: "",
       facultyName: "",
       name: "",
-      budgetBarrier: 0,
-      budgetCount: 0,
-      budgetSpots: 0,
-      paidBarrier: 0,
-      paidCount: 0,
-      paidSpots: 0,
+      fullTimeBudgetPlaces: 0,
+      fullTimePaidPlaces: 0,
+      partTimeBudgetPlaces: 0,
+      partTimePaidPlaces: 0,
+      distanceBudgetPlaces: 0,
+      distancePaidPlaces: 0,
     },
     onSubmit: async ({ value }) => {
+      const errorChecker = specCheck(speciality, value);
+      if (errorChecker.isNameDuplicate) {
+        notification["error"]({
+          message: "Ошибка",
+          description: "Специальность с таким именем уже есть",
+        });
+        return;
+      }
+      if (errorChecker.isNumberDuplicate) {
+        notification["error"]({
+          message: "Ошибка",
+          description: "Специальность с таким номером уже есть",
+        });
+        return;
+      }
       if (!isEdit.isEdit) {
         const entity = await createEntity("Speciality", value);
         dispatch(addSpeciality(entity.data));
@@ -172,7 +192,7 @@ export const SpecialityPage = () => {
         />
         <div className="grid md:grid-cols-2 md:gap-6">
           <form.Field
-            name="budgetSpots"
+            name="fullTimeBudgetPlaces"
             validators={{
               onChange: ({ value }) =>
                 !value
@@ -185,20 +205,20 @@ export const SpecialityPage = () => {
               return (
                 <>
                   <FormInput
-                    id_name={"budget_spot_count"}
+                    id_name={"fullTimeBudgetPlaces"}
                     id={field.name}
                     isRequired={true}
                     errorMessage={field.state.meta.errors.join(", ")}
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="Бюджетных мест"
+                    placeholder="Б. дневных мест"
                   />
                 </>
               );
             }}
           />
           <form.Field
-            name="paidSpots"
+            name="fullTimePaidPlaces"
             validators={{
               onChange: ({ value }) =>
                 !value
@@ -211,13 +231,121 @@ export const SpecialityPage = () => {
               return (
                 <>
                   <FormInput
-                    id_name={"paid_spot_count"}
+                    id_name={"fullTimePaidPlaces"}
                     id={field.name}
                     isRequired={true}
                     errorMessage={field.state.meta.errors.join(", ")}
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="Платных мест"
+                    placeholder="Пл. дневных мест"
+                  />
+                </>
+              );
+            }}
+          />
+        </div>
+        <div className="grid md:grid-cols-2 md:gap-6">
+          <form.Field
+            name="partTimeBudgetPlaces"
+            validators={{
+              onChange: ({ value }) =>
+                !value
+                  ? "Обязательное поле"
+                  : !validateInteger(value)
+                    ? "Неверный формат"
+                    : undefined,
+            }}
+            children={(field) => {
+              return (
+                <>
+                  <FormInput
+                    id_name={"partTimeBudgetPlaces"}
+                    id={field.name}
+                    isRequired={true}
+                    errorMessage={field.state.meta.errors.join(", ")}
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="Б. заочных мест"
+                  />
+                </>
+              );
+            }}
+          />
+          <form.Field
+            name="partTimePaidPlaces"
+            validators={{
+              onChange: ({ value }) =>
+                !value
+                  ? "Обязательное поле"
+                  : !validateInteger(value)
+                    ? "Неверный формат"
+                    : undefined,
+            }}
+            children={(field) => {
+              return (
+                <>
+                  <FormInput
+                    id_name={"partTimePaidPlaces"}
+                    id={field.name}
+                    isRequired={true}
+                    errorMessage={field.state.meta.errors.join(", ")}
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="Пл. заочных мест"
+                  />
+                </>
+              );
+            }}
+          />
+        </div>
+        <div className="grid md:grid-cols-2 md:gap-6">
+          <form.Field
+            name="distanceBudgetPlaces"
+            validators={{
+              onChange: ({ value }) =>
+                !value
+                  ? "Обязательное поле"
+                  : !validateInteger(value)
+                    ? "Неверный формат"
+                    : undefined,
+            }}
+            children={(field) => {
+              return (
+                <>
+                  <FormInput
+                    id_name={"distanceBudgetPlaces"}
+                    id={field.name}
+                    isRequired={true}
+                    errorMessage={field.state.meta.errors.join(", ")}
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="Б. дист. мест"
+                  />
+                </>
+              );
+            }}
+          />
+          <form.Field
+            name="distancePaidPlaces"
+            validators={{
+              onChange: ({ value }) =>
+                !value
+                  ? "Обязательное поле"
+                  : !validateInteger(value)
+                    ? "Неверный формат"
+                    : undefined,
+            }}
+            children={(field) => {
+              return (
+                <>
+                  <FormInput
+                    id_name={"distancePaidPlaces"}
+                    id={field.name}
+                    isRequired={true}
+                    errorMessage={field.state.meta.errors.join(", ")}
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="Пл. дист. мест"
                   />
                 </>
               );

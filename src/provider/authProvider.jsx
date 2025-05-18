@@ -73,15 +73,15 @@ const AuthProvider = ({ children }) => {
           educationType: "",
         }
       );
-      setCookie("auth-token", get(data, "token"), {
-        expires: new Date(Date.now() + 12096e5),
-      });
-      setCookie("user-role", get(data, "record.role"), {
-        expires: new Date(Date.now() + 12096e5),
-      });
-      setCookie("user-id", get(data, "record.id"), {
-        expires: new Date(Date.now() + 12096e5),
-      });
+      // setCookie("auth-token", get(data, "token"), {
+      //   expires: new Date(Date.now() + 12096e5),
+      // });
+      // setCookie("user-role", get(data, "record.role"), {
+      //   expires: new Date(Date.now() + 12096e5),
+      // });
+      // setCookie("user-id", get(data, "record.id"), {
+      //   expires: new Date(Date.now() + 12096e5),
+      // });
     } catch {
       antNotification({
         type: "error",
@@ -89,6 +89,7 @@ const AuthProvider = ({ children }) => {
         customMessage: "Пользователь с таким email уже существует",
       });
     }
+    authenticate({ email: email, password: password });
   };
 
   const unAuthenticate = () => {

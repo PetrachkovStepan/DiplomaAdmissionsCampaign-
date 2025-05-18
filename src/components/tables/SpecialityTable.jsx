@@ -33,10 +33,12 @@ export const SpecialityTable = ({ data }) => {
         <TableHeadCell className="text-center">№</TableHeadCell>
         <TableHeadCell className="text-center">Имя спец.</TableHeadCell>
         <TableHeadCell className="text-center">Факультет</TableHeadCell>
-        <TableHeadCell className="text-center">Бюджетных мест</TableHeadCell>
-        <TableHeadCell className="text-center">Осталось</TableHeadCell>
-        <TableHeadCell className="text-center">Платных мест</TableHeadCell>
-        <TableHeadCell className="text-center">Осталось</TableHeadCell>
+        <TableHeadCell className="text-center">Дневное Б.</TableHeadCell>
+        <TableHeadCell className="text-center">Заочное Б.</TableHeadCell>
+        <TableHeadCell className="text-center">Дист. Б.</TableHeadCell>
+        <TableHeadCell className="text-center">Дневное Пл.</TableHeadCell>
+        <TableHeadCell className="text-center">Заочное Пл.</TableHeadCell>
+        <TableHeadCell className="text-center">Дист. Пл.</TableHeadCell>
         <TableHeadCell className="text-center">Редактирование</TableHeadCell>
       </TableHead>
       <TableBody>
@@ -47,15 +49,23 @@ export const SpecialityTable = ({ data }) => {
             <TableCell className=" p-2 text-center">
               {item.facultyName}
             </TableCell>
-            <TableCell className=" p-2 text-center">
-              {item.budgetSpots}
+            <TableCell className=" p-1 text-center">
+              {item.fullTimeBudgetPlaces}
             </TableCell>
-            <TableCell className=" p-2 text-center">
-              {item.budgetSpots - item.budgetCount}
+            <TableCell className=" p-1 text-center">
+              {item.partTimeBudgetPlaces}
             </TableCell>
-            <TableCell className=" p-2 text-center">{item.paidSpots}</TableCell>
-            <TableCell className=" p-2 text-center">
-              {item.paidSpots - item.paidCount}
+            <TableCell className=" p-1 text-center">
+              {item.distanceBudgetPlaces}
+            </TableCell>
+            <TableCell className=" p-1 text-center">
+              {item.fullTimePaidPlaces}
+            </TableCell>
+            <TableCell className=" p-1 text-center">
+              {item.partTimePaidPlaces}
+            </TableCell>
+            <TableCell className=" p-1 text-center">
+              {item.distancePaidPlaces}
             </TableCell>
             <TableCell className=" p-2 text-center">
               <div className=" flex flex-row gap-3">

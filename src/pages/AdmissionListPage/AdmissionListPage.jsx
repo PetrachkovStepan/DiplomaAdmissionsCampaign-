@@ -6,14 +6,16 @@ import { Button, Select } from "flowbite-react";
 
 import "../../reuse.css";
 import { TableContainer } from "@/components/TableContainer";
+import { useCreateAddmissionList } from "@/api/addmissionList";
 
 export const AdmissionListPage = () => {
   // const { cookies } = useAuth();
   const [specFilter, setSpecFilter] = useState(true);
+  const { createList } = useCreateAddmissionList();
+  useCreateAddmissionList;
   // const [specFilterData, setSpecFilterData] = useState("blank");
   // const [facultyFilterData, setFacultyFilterData] = useState("blank");
 
-  
   const table_head = [
     "№ специальности",
     "Имя спец.",
@@ -51,11 +53,16 @@ export const AdmissionListPage = () => {
       is_benefits: "2",
     },
   ];
+  const handleCreateAddmissionList = async () => {
+    createList();
+  };
 
   return (
     <div className=" flex flex-col gap-5  h-full">
       <div className="flex flex-row w-full justify-center gap-5">
-        <Button>Создать список поступивших</Button>
+        <Button onClick={handleCreateAddmissionList}>
+          Создать список поступивших
+        </Button>
         <Select
           id="faculties"
           onChange={(e) => {
