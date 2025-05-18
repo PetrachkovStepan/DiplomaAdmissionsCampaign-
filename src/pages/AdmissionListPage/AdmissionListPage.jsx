@@ -1,62 +1,88 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { Button, Select } from "flowbite-react";
-
-// import { useAuth } from "../../provider/authProvider";
-
-import "../../reuse.css";
-import { TableContainer } from "@/components/TableContainer";
 import { useCreateAddmissionList } from "@/api/addmissionList";
+import { AddmissionTable } from "@/components/tables/AddmissionTable";
+import { ApiContext } from "@/context/ApiContext";
 
 export const AdmissionListPage = () => {
-  // const { cookies } = useAuth();
-  const [specFilter, setSpecFilter] = useState(true);
   const { createList } = useCreateAddmissionList();
-  useCreateAddmissionList;
-  // const [specFilterData, setSpecFilterData] = useState("blank");
-  // const [facultyFilterData, setFacultyFilterData] = useState("blank");
+  const { getListOfEntities } = useContext(ApiContext);
+  const [admissionListData, setAdmissionListData] = useState([]);
+  const [faculty, setFaculty] = useState("Факультет");
+  const [speciality, setSpeciality] = useState("Специальность");
+  const [specFilter, setSpecFilter] = useState(true);
+  const [specFilterData, setSpecFilterData] = useState([
+    { name: "Специальность", facultyName: "Факультет" },
+  ]);
+  const [facultyFilterData, setFacultyFilterData] = useState(["Факультет"]);
 
-  const table_head = [
-    "№ специальности",
-    "Имя спец.",
-    "Факультет",
-    "ФИО студента",
-    "Балл",
-    "Категория",
-  ];
-  const list_data = [
-    {
-      id: "boofId1",
-      spec_num: "1-39 01 01",
-      spec_name: "ИСИТ(БМ)",
-      faculty: "ФКП",
-      student_name: "Иванов Иван Иванович",
-      points: 320,
-      is_benefits: "1",
-    },
-    {
-      id: "boofId2",
-      spec_num: "1-39 01 01",
-      spec_name: "ИСИТ(БМ)",
-      faculty: "ФКП",
-      student_name: "Иванов Иван Иванович",
-      points: 320,
-      is_benefits: "2",
-    },
-    {
-      id: "boofId3",
-      spec_num: "1-39 01 01",
-      spec_name: "ИСИТ(БМ)",
-      faculty: "ФКП",
-      student_name: "Иванов Иван Иванович",
-      points: 320,
-      is_benefits: "2",
-    },
-  ];
-  const handleCreateAddmissionList = async () => {
-    createList();
+  useEffect(() => {
+    getAllSpec();
+    getAddmissionList();
+  }, []);
+  const getAllSpec = async () => {
+    const spec_data = await getListOfEntities("Speciality", {
+      expand: [],
+      fields: [],
+      page: -1,
+      perPage: -1,
+      sort: [],
+      filter: [],
+      skipTotal: -1,
+    });
+    const facultyDefault = ["Факультет"];
+    const specDefault = [{ name: "Специальность", facultyName: "Факультет" }];
+    setFacultyFilterData(
+      Array.from(
+        new Set([
+          ...facultyDefault,
+          ...spec_data.data.items.map(({ facultyName }) => facultyName),
+        ])
+      )
+    );
+    setSpecFilterData([
+      ...specDefault,
+      ...spec_data.data.items.map(({ name, facultyName }) => ({
+        name,
+        facultyName,
+      })),
+    ]);
   };
+  const getAddmissionList = async () => {
+    console.log(specFilterData[0].name, facultyFilterData);
 
+    const data = await getListOfEntities("AdmissionListItem", {
+      expand: ["userId", "specialityId"],
+      fields: [],
+      page: -1,
+      perPage: -1,
+      sort: [],
+      filter: [],
+      skipTotal: -1,
+    });
+    setAdmissionListData(data.data.items);
+    return data.data.items;
+  };
+  const handleCreateAddmissionList = async () => {
+    await createList();
+    await getAddmissionList();
+  };
+  const handleApplyFilters = async () => {
+    console.log(speciality);
+
+    let data = await getAddmissionList();
+    if (speciality != "Специальность") {
+      data = data.filter((item) => item.expand.specialityId.name == speciality);
+    }
+    if (faculty != "Факультет") {
+      data = data.filter(
+        (item) => item.expand.specialityId.facultyName === faculty
+      );
+    }
+    setAdmissionListData(data);
+    // console.log(data);
+  };
   return (
     <div className=" flex flex-col gap-5  h-full">
       <div className="flex flex-row w-full justify-center gap-5">
@@ -64,31 +90,43 @@ export const AdmissionListPage = () => {
           Создать список поступивших
         </Button>
         <Select
-          id="faculties"
+          id={"spec_num"}
           onChange={(e) => {
-            if (e.target.value == "blank") {
+            setFaculty(e.target.value);
+            if (e.target.value == "Факультет") {
               setSpecFilter(true);
             } else {
               setSpecFilter(false);
             }
           }}
         >
-          <option value={"blank"}>Факультет</option>
-          <option value={"ФКП"}>ФКП</option>
-          <option value={"ФРЭ"}>ФРЭ</option>
+          {facultyFilterData.map((item, i) => (
+            <option key={i} value={item}>
+              {item}
+            </option>
+          ))}
         </Select>
-        <Select id="specialities" disabled={specFilter}>
-          <option value={"blank"}>Cпециальность</option>
-          <option value={"1"}>специальность 1</option>
-          <option value={"2"}>специальность 2</option>
-          <option value={"3"}>специальность 3</option>
-          <option value={"4"}>специальность 4</option>
+        <Select
+          id={"spec_name"}
+          disabled={specFilter}
+          onChange={(e) => {
+            setSpeciality(e.target.value);
+          }}
+        >
+          {[
+            ...[{ name: "Специальность", facultyName: "Факультет" }],
+            ...specFilterData.filter((item) => item.facultyName === faculty),
+          ].map((item, i) => (
+            <option key={i} value={item.name}>
+              {item.name}
+            </option>
+          ))}
         </Select>
-        <Button>Применить фильтры</Button>
+        <Button onClick={handleApplyFilters}>Применить фильтры</Button>
         <Button disabled={specFilter}>Скачать</Button>
       </div>
       <div className=" flex h-full justify-center">
-        <TableContainer table_head={table_head} data={list_data} />
+        <AddmissionTable data={admissionListData} />
       </div>
     </div>
   );

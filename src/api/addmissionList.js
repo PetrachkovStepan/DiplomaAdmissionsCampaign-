@@ -3,11 +3,38 @@ import { useContext, useEffect } from "react";
 
 //addmission list creation
 export function useCreateAddmissionList() {
-  const { getListOfEntities, createEntity, getEntityById, updateEntity } =
+  const { getListOfEntities, createEntity, updateEntity } =
     useContext(ApiContext);
 
-  const createList = () => {
-    createListByForm("дневная", "бюджетная");
+  const createList = async () => {
+    //дневная бюджетная
+    await createListByForm("дневная", "бюджетная", [0]);
+    await createListByForm("дневная", "бюджетная", [1, 2, 3]);
+
+    // //дневная платная
+    // createListByForm("дневная", "платная", 0);
+    // createListByForm("дневная", "платная", 1);
+    // createListByForm("дневная", "платная", 2);
+
+    // //заочная бюджетная
+    // createListByForm("заочная", "бюджетная", 0);
+    // createListByForm("заочная", "бюджетная", 1);
+    // createListByForm("заочная", "бюджетная", 2);
+
+    // //заочная платная
+    // createListByForm("заочная", "платная", 0);
+    // createListByForm("заочная", "платная", 1);
+    // createListByForm("заочная", "платная", 2);
+
+    // //дистанционная бюджетная
+    // createListByForm("дистанционная", "бюджетная", 0);
+    // createListByForm("дистанционная", "бюджетная", 1);
+    // createListByForm("дистанционная", "бюджетная", 2);
+
+    // //дистанционная платная
+    // createListByForm("дистанционная", "платная", 0);
+    // createListByForm("дистанционная", "платная", 1);
+    // createListByForm("дистанционная", "платная", 2);
   };
   const getAllUsers = async (filter) => {
     const enrollee_data = await getListOfEntities("users", {
@@ -16,7 +43,7 @@ export function useCreateAddmissionList() {
       page: -1,
       perPage: -1,
       sort: ["score"],
-      filter: ["role=2", "approved=true", ...filter],
+      filter: ["role=2", "isCompleted=false", "approved=true", ...filter],
       skipTotal: -1,
     });
     return enrollee_data.data.items;
@@ -34,8 +61,6 @@ export function useCreateAddmissionList() {
     return choice_data.data.items;
   };
   const getAdmissionsCount = async (formOfStudy, paymentType, specialityId) => {
-    console.log(specialityId);
-
     const admission_data = (
       await getListOfEntities("AdmissionListItem", {
         expand: ["userId"],
@@ -62,26 +87,47 @@ export function useCreateAddmissionList() {
 
   //Создание списка по направлениям и формам
 
-  const createListByForm = async (formOfStudy, paymentType) => {
+  const createListByForm = async (formOfStudy, paymentType, category) => {
+    let categoryRequest = "";
+    if (category.length == 1) {
+      categoryRequest = "category=" + category[0];
+    } else {
+      categoryRequest = `category=1 || category=2 || category=3`;
+    }
     //получаем пользователей отсортированных по баллам
     const users = await getAllUsers([
       "formOfStudy='" + formOfStudy + "'",
       "paymentType='" + paymentType + "'",
+      categoryRequest,
     ]);
 
+    if (category.length > 1) {
+      console.log("sorting...");
+
+      users.sort((a, b) => {
+        // Если баллы не равны, сортируем по убыванию баллов
+        if (a.score !== b.score) {
+          return b.score - a.score;
+        }
+        // Если баллы равны, категория 1 должна стоять выше
+        if (a.category === 1) {
+          return -1;
+        }
+        if (b.category === 1) {
+          return 1;
+        }
+        // Если категории не равны 1, оставляем порядок без изменений
+        return 0;
+      });
+    }
+
     // проходимся по каждому пользователю
+
     for (let i = 0; i < users.length; i++) {
       const choices = await getAllUserChoices(users[i].id);
       // проходимся по каждому выбору пользователя
-      for (let j = 0; j < choices.length; j++) {
-        console.log(
-          await getAdmissionsCount(
-            formOfStudy,
-            paymentType,
-            choices[j].specialityId
-          )
-        );
 
+      for (let j = 0; j < choices.length; j++) {
         if (
           (await getAdmissionsCount(
             formOfStudy,
@@ -92,10 +138,14 @@ export function useCreateAddmissionList() {
             getFieldBasedOnStrings(formOfStudy, paymentType)
           ]
         ) {
+          await createListItem(choices[j].userId, choices[j].specialityId);
           console.log("зачислен");
-          return;
+          break;
         } else {
-          continue;
+          if (j >= choices.length - 1) {
+            console.log("отчислен");
+            break;
+          }
         }
       }
     }
