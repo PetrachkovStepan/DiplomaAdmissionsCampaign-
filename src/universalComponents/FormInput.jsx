@@ -8,6 +8,7 @@ const FormInput = ({
   className,
   inputType = "default",
   isRequired,
+  metaError,
   ...rest
 }) => {
   return (
@@ -37,6 +38,9 @@ const FormInput = ({
       </label>
       <label className="text-red-500 mt-0.5 text-sm ml-1">
         {errorMessage || "\t"}
+      </label>
+      <label className="text-red-500 mt-0.5 text-sm ml-1">
+        {metaError || "\t"}
       </label>
     </div>
   );

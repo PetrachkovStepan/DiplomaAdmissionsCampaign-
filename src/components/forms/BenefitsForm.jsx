@@ -35,8 +35,6 @@ export const BenefitsForm = () => {
       filter: ['userId="' + cookies["user-id"] + '"'],
       skipTotal: -1,
     });
-    console.log("data.data.items");
-    console.log(data.data.items);
 
     dispatch(getBenefits(data.data.items));
   };

@@ -10,7 +10,7 @@ import { PageContainer } from "@/pages/PageContainer/PageContainer";
 export const Route = createRootRoute({ component: RootComponent });
 
 function RootComponent() {
-  const [cookies] = useCookies(["auth-token"]);
+  const [cookies] = useCookies(["auth-token", "user-id"]);
 
   return (
     <div className="h-full">

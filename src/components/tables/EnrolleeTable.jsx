@@ -11,7 +11,7 @@ import {
 } from "flowbite-react";
 
 export const EnrolleeTable = ({ data }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: "/enrollee" });
   return (
     <Table>
       <TableHead>
@@ -38,6 +38,9 @@ export const EnrolleeTable = ({ data }) => {
                 onClick={() => {
                   navigate({
                     to: "/enrolleeprofile",
+                    search: {
+                      id: item?.id,
+                    },
                   });
                 }}
               >

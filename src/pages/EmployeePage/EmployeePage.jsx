@@ -43,8 +43,6 @@ export const EmployeePage = () => {
       filter: [],
       skipTotal: -1,
     });
-    console.log(emloyee_data.data.items);
-
     dispatch(getEmployees(emloyee_data.data.items));
   };
   const getOneEmployee = async () => {
@@ -52,7 +50,7 @@ export const EmployeePage = () => {
       expand: ["userId"],
       fields: [],
     });
-    data.email = data.expand.userId.email;
+    data.email = "";
     data.name = data.expand.userId.name;
     data.password = "";
     data.role = data.expand.userId.role;
@@ -88,7 +86,6 @@ export const EmployeePage = () => {
             jobTitle: value.jobTitle,
             blocked: false,
           });
-
           await updateEntity("users", entity.data.id, {
             emailVisibility: true,
           });
@@ -109,11 +106,13 @@ export const EmployeePage = () => {
           value.password = null;
           await updateEntity("UniversityEmployeeInfo", isEdit.id, value);
           await updateEntity("users", value.expand.userId.id, {
-            email: value.email,
             name: value.name,
             role: value.role,
           });
           value.password = "";
+          value.expand.userId.email = "";
+          value.expand.userId.name = value.name;
+          value.expand.userId.role = value.role;
           dispatch(changeEdit(""));
           dispatch(changeEmloyee(value));
           form.reset(form.defaultValues);
@@ -140,11 +139,13 @@ export const EmployeePage = () => {
           name="email"
           validators={{
             onChange: ({ value }) =>
-              !value
-                ? "Обязательное поле"
-                : !validateEmail(value)
-                  ? "Неверный формат почты"
-                  : undefined,
+              !isEdit.isEdit
+                ? !value
+                  ? "Обязательное поле"
+                  : !validateEmail(value)
+                    ? "Неверный формат почты"
+                    : undefined
+                : undefined,
           }}
           children={(field) => {
             return (
@@ -152,7 +153,7 @@ export const EmployeePage = () => {
                 <FormInput
                   id_name={"email"}
                   id={field.email}
-                  isRequired={true}
+                  isRequired={!isEdit.isEdit}
                   errorMessage={field.state.meta.errors.join(", ")}
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}

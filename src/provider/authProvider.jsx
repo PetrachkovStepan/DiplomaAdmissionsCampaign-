@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { AuthContext } from "../context/AuthContext";
@@ -14,6 +15,30 @@ const AuthProvider = ({ children }) => {
         "http://127.0.0.1:8090/api/collections/users/auth-with-password",
         { identity: email, password: password }
       );
+      let emloyeeData = { blocked: false };
+
+      if (data.record.role != 2) {
+        emloyeeData = (
+          await axios.get(
+            "http://127.0.0.1:8090/api/collections/UniversityEmployeeInfo/records"
+          )
+        ).data.items;
+        emloyeeData = emloyeeData.filter(
+          (item) => item.userId === data.record.id
+        )[0];
+      }
+      setCookie("user-blocked", get(emloyeeData, "blocked"), {
+        expires: new Date(Date.now() + 12096e5),
+      });
+      setCookie("user-approved", get(data, "record.approved"), {
+        expires: new Date(Date.now() + 12096e5),
+      });
+      setCookie("user-enrollled", get(data, "record.enrollled"), {
+        expires: new Date(Date.now() + 12096e5),
+      });
+      setCookie("user-isCompleted", get(data, "record.isCompleted"), {
+        expires: new Date(Date.now() + 12096e5),
+      });
       setCookie("auth-token", get(data, "token"), {
         expires: new Date(Date.now() + 12096e5),
       });

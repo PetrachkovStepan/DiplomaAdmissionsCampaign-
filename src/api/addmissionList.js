@@ -84,6 +84,9 @@ export function useCreateAddmissionList() {
       specialityId: specialityId,
     });
   };
+  const getStudented = async (userId) => {
+    await updateEntity("users", userId, { isCompleted: true });
+  };
 
   //Создание списка по направлениям и формам
 
@@ -102,7 +105,7 @@ export function useCreateAddmissionList() {
     ]);
 
     if (category.length > 1) {
-      console.log("sorting...");
+      // console.log("sorting...");
 
       users.sort((a, b) => {
         // Если баллы не равны, сортируем по убыванию баллов
@@ -120,9 +123,10 @@ export function useCreateAddmissionList() {
         return 0;
       });
     }
+    console.log(users);
 
     // проходимся по каждому пользователю
-
+    return;
     for (let i = 0; i < users.length; i++) {
       const choices = await getAllUserChoices(users[i].id);
       // проходимся по каждому выбору пользователя
@@ -139,7 +143,8 @@ export function useCreateAddmissionList() {
           ]
         ) {
           await createListItem(choices[j].userId, choices[j].specialityId);
-          console.log("зачислен");
+          // await getStudented(choices[j].userId)
+          await console.log("зачислен");
           break;
         } else {
           if (j >= choices.length - 1) {

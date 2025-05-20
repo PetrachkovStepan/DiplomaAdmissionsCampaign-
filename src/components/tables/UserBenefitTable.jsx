@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 import { Button } from "flowbite-react";
 import { useDispatch } from "react-redux";
@@ -15,8 +15,10 @@ import {
 import { ApiContext } from "@/context/ApiContext";
 import { TrashBin } from "flowbite-react-icons/outline";
 import { removeBenefit } from "@/pages/HomePage/benefitSlice";
+import { ModalContainer } from "../ModalContainer";
 
 export const UserBenefitTable = ({ data }) => {
+  const [openModal, setOpenModal] = useState(false);
   const dispatch = useDispatch();
   const { entityDelete } = useContext(ApiContext);
   const deleteHandle = async (id) => {
@@ -39,15 +41,27 @@ export const UserBenefitTable = ({ data }) => {
             </TableCell>
 
             <TableCell className=" p-2 flex justify-center">
-                <Button
-                  outline={true}
-                  size="xs"
-                  onClick={() => {
-                    deleteHandle(item.id);
-                  }}
-                >
-                  <TrashBin />
-                </Button>
+              <Button
+                outline={true}
+                size="xs"
+                onClick={() => {
+                  setOpenModal(true);
+                  // deleteHandle(item.id);
+                }}
+              >
+                <TrashBin />
+              </Button>
+              <ModalContainer
+                openModal={openModal}
+                setOpenModal={setOpenModal}
+                header={"Удаление льготы"}
+                body={
+                  "Вы действительно хотите удалить свою льготу, это действие необратимо?"
+                }
+                handleAccept={() => {
+                  deleteHandle(item.id);
+                }}
+              />
             </TableCell>
           </TableRow>
         ))}

@@ -91,3 +91,8 @@ export const specCheck = (existingSpecialties, newSpecialty) => {
 export const containsSpecById = (arr, id) => {
   return arr.some((obj) => obj.specialityId === id);
 };
+
+export const  validateIdNum = (input) => {
+  const regex = /^\d{7}[A-Za-z]\d{3}[A-Za-z]{2}\d$/;
+  return regex.test(input);
+}

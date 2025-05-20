@@ -91,6 +91,8 @@ export const SpecialityPage = () => {
       if (!isEdit.isEdit) {
         const entity = await createEntity("Speciality", value);
         dispatch(addSpeciality(entity.data));
+        
+        form.reset(form.defaultValues);
       } else {
         const entity = await updateEntity("Speciality", isEdit.id, value);
         dispatch(changeEdit(""));

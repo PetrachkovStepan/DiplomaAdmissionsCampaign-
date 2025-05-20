@@ -23,7 +23,6 @@ export const ExamSertificateForm = ({ user_id }) => {
   }, []);
 
   const createCertificate = async () => {
-    console.log(hasDuplicateSubject(exam, { subject: subject }));
     if (subject == "blank") {
       notification["error"]({
         message: "Ошибка",
@@ -38,7 +37,7 @@ export const ExamSertificateForm = ({ user_id }) => {
       });
       return;
     }
-    if (exam.length < 3) {
+    if (exam.length < 4) {
       const data = await createEntity("ExamCertificate", {
         userId: user_id,
         subject: subject,
@@ -58,8 +57,6 @@ export const ExamSertificateForm = ({ user_id }) => {
       filter: ['userId="' + user_id + '"'],
       skipTotal: -1,
     });
-    console.log("data.data.items");
-    console.log(data.data.items);
 
     dispatch(getExams(data.data.items));
   };
@@ -79,15 +76,16 @@ export const ExamSertificateForm = ({ user_id }) => {
               }}
             >
               <option value={"blank"}>Предмет...</option>
-              <option value={"mathematics"}>Математика</option>
-              <option value={"physics"}>Физика</option>
-              <option value={"biology"}>Биология</option>
-              <option value={"lang"}>Рус/Бел язык</option>
-              <option value={"chemistry"}>Химия</option>
-              <option value={"history"}>История</option>
-              <option value={"foreign"}>Английский язык</option>
-              <option value={"social"}>Обществоведение</option>
-              <option value={"geography"}>География</option>
+              <option value={"Аттестат"}>Аттестат</option>
+              <option value={"Математика"}>Математика</option>
+              <option value={"Физика"}>Физика</option>
+              <option value={"Биология"}>Биология</option>
+              <option value={"Рус/Бел язык"}>Рус/Бел язык</option>
+              <option value={"Химия"}>Химия</option>
+              <option value={"История"}>История</option>
+              <option value={"Английский язык"}>Английский язык</option>
+              <option value={"Обществоведение"}>Обществоведение</option>
+              <option value={"География"}>География</option>
             </Select>
             <div className="flex flex-row items-center gap-4">
               <Label>Оценка:</Label>

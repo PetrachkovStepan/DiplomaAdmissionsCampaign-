@@ -12,8 +12,11 @@ import { printApplicationPDF } from "@/utils/print/printPDF";
 import { containsSpecById } from "@/utils/validators";
 import { notification } from "antd";
 import { useNavigate } from "@tanstack/react-router";
+import { ModalContainer } from "@/components/ModalContainer";
+import { get } from "lodash";
 export const ApplicationPage = () => {
-  const navigate = useNavigate({from: "/application"})
+  const navigate = useNavigate({ from: "/application" });
+  const [openModal, setOpenModal] = useState(false);
   const [cookies, setCookie] = useCookies(["user-id"]);
   const [faculty, setFaculty] = useState("Факультет");
   const [speciality, setSpeciality] = useState("Специальность");
@@ -108,11 +111,34 @@ export const ApplicationPage = () => {
     dispatch(getChoices(choice_data.data.items));
   };
   const getEnrolled = async () => {
-    await updateEntity("users", cookies["user-id"], { enrollled: true });
-    navigate({to:"/"})
+    if (choice.length != 0) {
+      setOpenModal(true);
+      // await updateEntity("users", cookies["user-id"], { enrollled: true });
+      // navigate({ to: "/" });
+    } else {
+      notification["error"]({
+        message: "Ошибка",
+        description: "Вы не внесли ни одной специальности",
+      });
+    }
   };
   return (
     <div className=" flex flex-col h-full gap-4">
+      <ModalContainer
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        header={"Подача заявления"}
+        body={
+          "Вы собираетесь подать заявление, после этого его редактирование станет недоступно."
+        }
+        handleAccept={async () => {
+          await updateEntity("users", cookies["user-id"], { enrollled: true });
+          setCookie("user-enrollled", true, {
+                  expires: new Date(Date.now() + 12096e5),
+                })
+          navigate({ to: "/" });
+        }}
+      />
       <article className=" flex w-full gap-4 flex-row items-center justify-center">
         <Select
           id={"spec_num"}

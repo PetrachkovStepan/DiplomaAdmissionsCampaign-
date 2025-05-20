@@ -6,6 +6,7 @@ import employeeReducer from "@/pages/EmployeePage/employeeSlice";
 import specialityReduser from "@/pages/SpecialityPage/specialitySlice";
 
 import isEditReducer from "./globalSlice/isEditSlice";
+import userReducer from "./globalSlice/userSlice";
 
 export default configureStore({
   reducer: {
@@ -15,5 +16,6 @@ export default configureStore({
     benefit: benefitReducer,
     choice: choiceReducer,
     exam: examReducer,
+    user: userReducer,
   },
 });

@@ -11,11 +11,15 @@ import { ApiContext } from "@/context/ApiContext";
 import { useNavigate } from "@tanstack/react-router";
 import { useCookies } from "react-cookie";
 import FormInput from "@/universalComponents/FormInput";
+import { validateIdNum } from "@/utils/validators";
+import { useSelector } from "react-redux";
+import { notification } from "antd";
 
 export const PassportForm = ({ user_id, children }) => {
-  const navigate = useNavigate({ from: "/home" });
-  const [cookies, setCookie] = useCookies(["user-id"]);
+  const navigate = useNavigate({ from: "/" });
+  const [cookies] = useCookies(["user-id"]);
   const { getListOfEntities, updateEntity } = useContext(ApiContext);
+  const exam = useSelector((state) => state.exam.exam);
 
   useEffect(() => {
     getInfo();
@@ -45,6 +49,25 @@ export const PassportForm = ({ user_id, children }) => {
       education: education.data.items[0],
     });
   };
+  const updateUserApproval = async (param, value) => {
+    if (exam.length != 4 && param == "approved") {
+      notification["error"]({
+        message: "Ошибка",
+        description: "Не достаточно экзаминационных сертификатов",
+      });
+      return;
+    }
+    if (param == "enrolled") {
+      console.log(await updateEntity("users", user_id, { approved: false }));
+    }
+    let score = 0;
+    for (let i = 0; i < exam.length; i++) {
+      score += exam[i].score;
+    }
+    console.log("SEND NOTIFICATION");
+    await updateEntity("users", user_id, { [param]: value, score: score });
+    form.handleSubmit();
+  };
 
   const form = useForm({
     defaultValues: {
@@ -67,7 +90,7 @@ export const PassportForm = ({ user_id, children }) => {
         scoolType: "",
         schoolName: "",
         releaseDate: new Date(),
-        foreighnLanguage: "English",
+        foreighnLanguage: "",
         educationType: "",
       },
     },
@@ -78,7 +101,11 @@ export const PassportForm = ({ user_id, children }) => {
         value.education.id,
         value.education
       );
-      navigate({ to: "/application" });
+      if (cookies["user-role"] == "2") {
+        navigate({ to: "/application" });
+      } else {
+        navigate({ to: "/enrollee" });
+      }
     },
   });
   return (
@@ -94,12 +121,12 @@ export const PassportForm = ({ user_id, children }) => {
           <Label className=" text-lg">Паспортные данные</Label>
         </div>
         <form.Field
-          name="passport"
+          name="passport.nameKir"
           validators={{
             onChange: ({ value }) => {
-              return !value.nameKir
+              return !value
                 ? "Обязательное поле"
-                : value.nameKir.length < 3
+                : value.length < 3
                   ? "ФИО должно иметь минимум 3 символа"
                   : undefined;
             },
@@ -111,15 +138,12 @@ export const PassportForm = ({ user_id, children }) => {
                   id_name={"passport.nameKir"}
                   id={field.name}
                   placeholder="ФИО кириллицей"
-                  value={field.state.value.nameKir}
+                  value={field.state.value}
                   isRequired={true}
                   errorMessage={field.state.meta.errors.join(", ")}
+                  metaError={field.state.meta.errors.join(", ")}
                   onChange={(e) => {
-                    const newData = {
-                      ...field.state.value,
-                      nameKir: e.target.value,
-                    };
-                    field.handleChange(newData);
+                    field.handleChange(e.target.value);
                   }}
                 />
               </>
@@ -127,12 +151,12 @@ export const PassportForm = ({ user_id, children }) => {
           }}
         />
         <form.Field
-          name="passport"
+          name="passport.nameLat"
           validators={{
             onChange: ({ value }) => {
-              return !value.nameLat
+              return !value
                 ? "Обязательное поле"
-                : value.nameLat.length < 3
+                : value.length < 3
                   ? "ФИО должно иметь минимум 3 символа"
                   : undefined;
             },
@@ -144,13 +168,10 @@ export const PassportForm = ({ user_id, children }) => {
                   id_name={"passport.nameLat"}
                   id={field.name}
                   isRequired={true}
-                  value={field.state.value.nameLat}
+                  value={field.state.value}
+                  metaError={field.state.meta.errors.join(", ")}
                   onChange={(e) => {
-                    const newData = {
-                      ...field.state.value,
-                      nameLat: e.target.value,
-                    };
-                    field.handleChange(newData);
+                    field.handleChange(e.target.value);
                   }}
                   placeholder="ФИО латиницей"
                 />
@@ -159,12 +180,12 @@ export const PassportForm = ({ user_id, children }) => {
           }}
         />
         <form.Field
-          name="passport"
+          name="passport.series"
           validators={{
             onChange: ({ value }) => {
-              return !value.series
+              return !value
                 ? "Обязательное поле"
-                : value.series.length != 2
+                : value.length != 2
                   ? "Неверный формат"
                   : undefined;
             },
@@ -176,13 +197,10 @@ export const PassportForm = ({ user_id, children }) => {
                   id_name={"passport.series"}
                   id={field.name}
                   isRequired={true}
-                  value={field.state.value.series}
+                  value={field.state.value}
+                  metaError={field.state.meta.errors.join(", ")}
                   onChange={(e) => {
-                    const newData = {
-                      ...field.state.value,
-                      series: e.target.value,
-                    };
-                    field.handleChange(newData);
+                    field.handleChange(e.target.value);
                   }}
                   placeholder="Серия паспорта"
                 />
@@ -191,12 +209,12 @@ export const PassportForm = ({ user_id, children }) => {
           }}
         />
         <form.Field
-          name="passport"
+          name="passport.number"
           validators={{
             onChange: ({ value }) => {
-              return !value.number
+              return !value
                 ? "Обязательное поле"
-                : value.number.length != 7
+                : value.length != 7
                   ? "Номер паспорта должен иметь 7 символов"
                   : undefined;
             },
@@ -208,13 +226,10 @@ export const PassportForm = ({ user_id, children }) => {
                   id_name={"passport.number"}
                   id={field.name}
                   isRequired={true}
-                  value={field.state.value.number}
+                  value={field.state.value}
+                  metaError={field.state.meta.errors.join(", ")}
                   onChange={(e) => {
-                    const newData = {
-                      ...field.state.value,
-                      number: e.target.value,
-                    };
-                    field.handleChange(newData);
+                    field.handleChange(e.target.value);
                   }}
                   placeholder="Номер паспорта"
                 />
@@ -223,7 +238,16 @@ export const PassportForm = ({ user_id, children }) => {
           }}
         />
         <form.Field
-          name="passport"
+          name="passport.idNum"
+          validators={{
+            onChange: ({ value }) => {
+              return !value
+                ? "Обязательное поле"
+                : !validateIdNum(value)
+                  ? "Неверный формат"
+                  : undefined;
+            },
+          }}
           children={(field) => {
             return (
               <>
@@ -231,13 +255,10 @@ export const PassportForm = ({ user_id, children }) => {
                   id_name={"passport.idNum"}
                   id={field.name}
                   isRequired={true}
-                  value={field.state.value.idNum}
+                  value={field.state.value}
+                  metaError={field.state.meta.errors.join(", ")}
                   onChange={(e) => {
-                    const newData = {
-                      ...field.state.value,
-                      idNum: e.target.value,
-                    };
-                    field.handleChange(newData);
+                    field.handleChange(e.target.value);
                   }}
                   placeholder="Идентификационный номер"
                 />
@@ -246,7 +267,16 @@ export const PassportForm = ({ user_id, children }) => {
           }}
         />
         <form.Field
-          name="passport"
+          name="passport.givenByWhom"
+          validators={{
+            onChange: ({ value }) => {
+              return !value
+                ? "Обязательное поле"
+                : value.length < 3
+                  ? "Поле должно иметь минимум 3 символа"
+                  : undefined;
+            },
+          }}
           children={(field) => {
             return (
               <>
@@ -254,13 +284,10 @@ export const PassportForm = ({ user_id, children }) => {
                   id_name={"passport.givenByWhom"}
                   id={field.name}
                   isRequired={true}
-                  value={field.state.value.givenByWhom}
+                  value={field.state.value}
+                  metaError={field.state.meta.errors.join(", ")}
                   onChange={(e) => {
-                    const newData = {
-                      ...field.state.value,
-                      givenByWhom: e.target.value,
-                    };
-                    field.handleChange(newData);
+                    field.handleChange(e.target.value);
                   }}
                   placeholder="Кем выдан"
                 />
@@ -373,7 +400,16 @@ export const PassportForm = ({ user_id, children }) => {
           <Label className="text-lg">Образование</Label>
         </div>
         <form.Field
-          name="education"
+          name="education.documentName"
+          validators={{
+            onChange: ({ value }) => {
+              return !value
+                ? "Обязательное поле"
+                : value.length < 3
+                  ? "Поле должно иметь минимум 3 символа"
+                  : undefined;
+            },
+          }}
           children={(field) => {
             return (
               <>
@@ -381,13 +417,10 @@ export const PassportForm = ({ user_id, children }) => {
                   id_name={"education.documentName"}
                   id={field.name}
                   isRequired={true}
-                  value={field.state.value.documentName}
+                  value={field.state.value}
+                  metaError={field.state.meta.errors.join(", ")}
                   onChange={(e) => {
-                    const newData = {
-                      ...field.state.value,
-                      documentName: e.target.value,
-                    };
-                    field.handleChange(newData);
+                    field.handleChange(e.target.value);
                   }}
                   placeholder="Документ об образовании"
                 />
@@ -396,7 +429,16 @@ export const PassportForm = ({ user_id, children }) => {
           }}
         />
         <form.Field
-          name="education"
+          name="education.educationType"
+          validators={{
+            onChange: ({ value }) => {
+              return !value
+                ? "Обязательное поле"
+                : value.length < 3
+                  ? "Поле должно иметь минимум 3 символа"
+                  : undefined;
+            },
+          }}
           children={(field) => {
             return (
               <>
@@ -404,13 +446,10 @@ export const PassportForm = ({ user_id, children }) => {
                   id_name={"education.educationType"}
                   id={field.name}
                   isRequired={true}
-                  value={field.state.value.educationType}
+                  value={field.state.value}
+                  metaError={field.state.meta.errors.join(", ")}
                   onChange={(e) => {
-                    const newData = {
-                      ...field.state.value,
-                      educationType: e.target.value,
-                    };
-                    field.handleChange(newData);
+                    field.handleChange(e.target.value);
                   }}
                   placeholder="Образование"
                 />
@@ -419,7 +458,16 @@ export const PassportForm = ({ user_id, children }) => {
           }}
         />
         <form.Field
-          name="education"
+          name="education.scoolType"
+          validators={{
+            onChange: ({ value }) => {
+              return !value
+                ? "Обязательное поле"
+                : value.length < 3
+                  ? "Поле должно иметь минимум 3 символа"
+                  : undefined;
+            },
+          }}
           children={(field) => {
             return (
               <>
@@ -427,13 +475,10 @@ export const PassportForm = ({ user_id, children }) => {
                   id_name={"education.scoolType"}
                   id={field.name}
                   isRequired={true}
-                  value={field.state.value.scoolType}
+                  value={field.state.value}
+                  metaError={field.state.meta.errors.join(", ")}
                   onChange={(e) => {
-                    const newData = {
-                      ...field.state.value,
-                      scoolType: e.target.value,
-                    };
-                    field.handleChange(newData);
+                    field.handleChange(e.target.value);
                   }}
                   placeholder="Тип учреждения"
                 />
@@ -442,7 +487,16 @@ export const PassportForm = ({ user_id, children }) => {
           }}
         />
         <form.Field
-          name="education"
+          name="education.schoolName"
+          validators={{
+            onChange: ({ value }) => {
+              return !value
+                ? "Обязательное поле"
+                : value.length < 3
+                  ? "Поле должно иметь минимум 3 символа"
+                  : undefined;
+            },
+          }}
           children={(field) => {
             return (
               <>
@@ -450,13 +504,10 @@ export const PassportForm = ({ user_id, children }) => {
                   id_name={"education.schoolName"}
                   id={field.name}
                   isRequired={true}
-                  value={field.state.value.schoolName}
+                  value={field.state.value}
+                  metaError={field.state.meta.errors.join(", ")}
                   onChange={(e) => {
-                    const newData = {
-                      ...field.state.value,
-                      schoolName: e.target.value,
-                    };
-                    field.handleChange(newData);
+                    field.handleChange(e.target.value);
                   }}
                   placeholder="Название учреждения"
                 />
@@ -465,7 +516,16 @@ export const PassportForm = ({ user_id, children }) => {
           }}
         />
         <form.Field
-          name="education"
+          name="education.foreighnLanguage"
+          validators={{
+            onChange: ({ value }) => {
+              return !value
+                ? "Обязательное поле"
+                : value.length < 3
+                  ? "Поле должно иметь минимум 3 символа"
+                  : undefined;
+            },
+          }}
           children={(field) => {
             return (
               <>
@@ -473,13 +533,10 @@ export const PassportForm = ({ user_id, children }) => {
                   id_name={"education.foreighnLanguage"}
                   id={field.name}
                   isRequired={true}
-                  value={field.state.value.foreighnLanguage}
+                  value={field.state.value}
+                  metaError={field.state.meta.errors.join(", ")}
                   onChange={(e) => {
-                    const newData = {
-                      ...field.state.value,
-                      foreighnLanguage: e.target.value,
-                    };
-                    field.handleChange(newData);
+                    field.handleChange(e.target.value);
                   }}
                   placeholder="Ин. яз."
                 />
@@ -523,24 +580,24 @@ export const PassportForm = ({ user_id, children }) => {
       ) : (
         <>
           <Button
-            type="submit"
+            type="button"
             className="mt-5 w-full col-span-2"
             size="xl"
-            onSubmit={() => {
-              // e.preventDefault();
-              // navigate("/admissionList");
+            onClick={async (e) => {
+              e.preventDefault();
+              await updateUserApproval("approved", true);
             }}
           >
             Одобрить заявку
           </Button>
           <Button
-            type="submit"
+            type="button"
             className="mb-5 w-full col-span-2"
             size="xl"
             color="red"
-            onSubmit={() => {
-              // e.preventDefault();
-              // navigate("/admissionList");
+            onClick={async (e) => {
+              e.preventDefault();
+              await updateUserApproval("enrolled", false);
             }}
           >
             Отклонить заявку

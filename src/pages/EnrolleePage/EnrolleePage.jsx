@@ -1,9 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 
-import { Button, ToggleSwitch } from "flowbite-react";
-
-import { TrashBin } from "flowbite-react-icons/outline";
-import { TableContainer } from "@/components/TableContainer";
+import { ToggleSwitch } from "flowbite-react";
 import { ApiContext } from "@/context/ApiContext";
 import { EnrolleeTable } from "@/components/tables/EnrolleeTable";
 
@@ -14,7 +11,7 @@ export const EnrolleePage = () => {
 
   useEffect(() => {
     getAllEnrollee();
-  }, []);
+  }, [approve_switch]);
   const getAllEnrollee = async () => {
     const enrollee_data = await getListOfEntities("users", {
       expand: [],
@@ -22,10 +19,15 @@ export const EnrolleePage = () => {
       page: -1,
       perPage: -1,
       sort: [],
-      filter: ["role=2"],
+      filter: ["role=2", "enrolled=true"],
       skipTotal: -1,
     });
-    console.log(enrollee_data.data.items);
+    if (approve_switch) {
+      setEnrolleeData(
+        enrollee_data.data.items.filter((item) => !item.approved)
+      );
+      return;
+    }
     setEnrolleeData(enrollee_data.data.items);
   };
   return (
@@ -38,7 +40,7 @@ export const EnrolleePage = () => {
         />
       </div>
       <div className=" flex h-full justify-center">
-        <EnrolleeTable data={enrolleeData}/>
+        <EnrolleeTable data={enrolleeData} />
       </div>
     </div>
   );
