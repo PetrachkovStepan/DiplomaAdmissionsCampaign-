@@ -4,6 +4,8 @@ import { Button, Select } from "flowbite-react";
 import { useCreateAddmissionList } from "@/api/addmissionList";
 import { AddmissionTable } from "@/components/tables/AddmissionTable";
 import { ApiContext } from "@/context/ApiContext";
+import { printAddmissionListPDF } from "@/utils/print/printPDF";
+import { sendMail } from "@/utils/email/email";
 
 export const AdmissionListPage = () => {
   const { createList } = useCreateAddmissionList();
@@ -50,8 +52,6 @@ export const AdmissionListPage = () => {
     ]);
   };
   const getAddmissionList = async () => {
-    console.log(specFilterData[0].name, facultyFilterData);
-
     const data = await getListOfEntities("AdmissionListItem", {
       expand: ["userId", "specialityId"],
       fields: [],
@@ -123,7 +123,15 @@ export const AdmissionListPage = () => {
           ))}
         </Select>
         <Button onClick={handleApplyFilters}>Применить фильтры</Button>
-        <Button disabled={specFilter}>Скачать</Button>
+        <Button
+          disabled={specFilter}
+          onClick={() => {
+            // sendMail("Name1", "thegreateandpouwerful@gmail.com", "Addmission completed", "Поздравляем, вас заяислили в ВУЗ");
+            printAddmissionListPDF(admissionListData);
+          }}
+        >
+          Скачать
+        </Button>
       </div>
       <div className=" flex h-full justify-center">
         <AddmissionTable data={admissionListData} />

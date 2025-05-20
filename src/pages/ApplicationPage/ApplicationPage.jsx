@@ -13,11 +13,16 @@ import { containsSpecById } from "@/utils/validators";
 import { notification } from "antd";
 import { useNavigate } from "@tanstack/react-router";
 import { ModalContainer } from "@/components/ModalContainer";
-import { get } from "lodash";
+
 export const ApplicationPage = () => {
   const navigate = useNavigate({ from: "/application" });
   const [openModal, setOpenModal] = useState(false);
+
+  const [formOfStudy, setFormOfStudy] = useState("blank");
+  const [paymentType, setPaymentType] = useState("blank");
+
   const [cookies, setCookie] = useCookies(["user-id"]);
+
   const [faculty, setFaculty] = useState("Факультет");
   const [speciality, setSpeciality] = useState("Специальность");
   const [specFilter, setSpecFilter] = useState(true);
@@ -111,6 +116,13 @@ export const ApplicationPage = () => {
     dispatch(getChoices(choice_data.data.items));
   };
   const getEnrolled = async () => {
+    if (formOfStudy == "blank" || paymentType == "blank") {
+      notification["error"]({
+        message: "Ошибка",
+        description: "Вы не выбрали форму образования и тип оплаты",
+      });
+      return;
+    }
     if (choice.length != 0) {
       setOpenModal(true);
       // await updateEntity("users", cookies["user-id"], { enrollled: true });
@@ -132,14 +144,55 @@ export const ApplicationPage = () => {
           "Вы собираетесь подать заявление, после этого его редактирование станет недоступно."
         }
         handleAccept={async () => {
-          await updateEntity("users", cookies["user-id"], { enrollled: true });
-          setCookie("user-enrollled", true, {
-                  expires: new Date(Date.now() + 12096e5),
-                })
+          await updateEntity("users", cookies["user-id"], {
+            enrolled: true,
+            formOfStudy: formOfStudy,
+            paymentType: paymentType,
+          });
+          setCookie("user-enrolled", true, {
+            expires: new Date(Date.now() + 12096e5),
+          });
           navigate({ to: "/" });
         }}
       />
       <article className=" flex w-full gap-4 flex-row items-center justify-center">
+        <Select
+          id={"payment"}
+          title="Форма оплаты"
+          onChange={(e) => {
+             setPaymentType(e.target.value);
+          }}
+        >
+          <option value={"blank"} defaultChecked>
+            Форма оплаты
+          </option>
+          <option value={"бюджетная"} defaultChecked>
+            Бюджетная
+          </option>
+          <option value={"платная"} defaultChecked>
+            Платная
+          </option>
+        </Select>
+        <Select
+          id={"form"}
+          title="Форма обучения"
+          onChange={(e) => {
+            setFormOfStudy(e.target.value);
+          }}
+        >
+          <option value={"blank"} defaultChecked>
+            Форма обучения
+          </option>
+          <option value={"дневная"} defaultChecked>
+            Дневная
+          </option>
+          <option value={"заочная"} defaultChecked>
+            Заочная
+          </option>
+          <option value={"дистанционная"} defaultChecked>
+            Дистанционная
+          </option>
+        </Select>
         <Select
           id={"spec_num"}
           onChange={(e) => {
@@ -187,6 +240,13 @@ export const ApplicationPage = () => {
       <ApplicationTable data={choice} />
       <Button
         onClick={() => {
+          if (formOfStudy == "blank" || paymentType == "blank") {
+            notification["error"]({
+              message: "Ошибка",
+              description: "Вы не выбрали форму образования и тип оплаты",
+            });
+            return;
+          }
           printApplicationPDF(choice);
         }}
       >

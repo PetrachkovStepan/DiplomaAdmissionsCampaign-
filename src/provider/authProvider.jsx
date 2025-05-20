@@ -33,7 +33,7 @@ const AuthProvider = ({ children }) => {
       setCookie("user-approved", get(data, "record.approved"), {
         expires: new Date(Date.now() + 12096e5),
       });
-      setCookie("user-enrollled", get(data, "record.enrollled"), {
+      setCookie("user-enrolled", get(data, "record.enrolled"), {
         expires: new Date(Date.now() + 12096e5),
       });
       setCookie("user-isCompleted", get(data, "record.isCompleted"), {

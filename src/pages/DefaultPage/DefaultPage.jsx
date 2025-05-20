@@ -5,7 +5,7 @@ export const DefaultPage = () => {
   const [cookies] = useCookies([
     "user-blocked",
     "user-isCompleted",
-    "user-enrollled",
+    "user-enrolled",
     "user-approved",
   ]);
 
@@ -18,7 +18,7 @@ export const DefaultPage = () => {
       <Label className="text-xl mt-5 text-[#0E7EA3]">
         {cookies["user-isCompleted"]
           ? "Поздравляем! Вы были зачислены в университет"
-          : cookies["user-enrollled"]
+          : cookies["user-enrolled"]
             ? cookies["user-approved"]
               ? "Ваши документы рассмотрены, ожидайте результатов приемной кампании"
               : "Ваши документы на рассмотрении..."

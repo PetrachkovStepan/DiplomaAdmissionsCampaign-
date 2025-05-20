@@ -14,7 +14,7 @@ export const MainHeader = () => {
     "user-role",
     "user-blocked",
     "user-approved",
-    "user-enrollled",
+    "user-enrolled",
     "user-isCompleted",
   ]);
 
@@ -33,6 +33,7 @@ export const MainHeader = () => {
                 <Navbar.Link href="/speciality">Специальности</Navbar.Link>
                 <Navbar.Link href="/enrollee">Абитуриенты</Navbar.Link>
                 <Navbar.Link href="/admissionList">Списки</Navbar.Link>
+                <Navbar.Link href="/statistics">Статистика</Navbar.Link>
               </>
             ) : null}
           </>
@@ -51,7 +52,7 @@ export const MainHeader = () => {
         return (
           <>
             {cookies["user-isCompleted"] ||
-            cookies["user-enrollled"] ||
+            cookies["user-enrolled"] ||
             cookies["user-approved"] ? null : (
               <Navbar.Link href="/home">Личная информация</Navbar.Link>
             )}

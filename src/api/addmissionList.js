@@ -1,5 +1,6 @@
 import { ApiContext } from "@/context/ApiContext";
-import { useContext, useEffect } from "react";
+import { sendMail } from "@/utils/email/email";
+import { useContext } from "react";
 
 //addmission list creation
 export function useCreateAddmissionList() {
@@ -11,30 +12,25 @@ export function useCreateAddmissionList() {
     await createListByForm("дневная", "бюджетная", [0]);
     await createListByForm("дневная", "бюджетная", [1, 2, 3]);
 
-    // //дневная платная
-    // createListByForm("дневная", "платная", 0);
-    // createListByForm("дневная", "платная", 1);
-    // createListByForm("дневная", "платная", 2);
+    // // //дневная платная
+    await createListByForm("дневная", "платная", [0]);
+    await createListByForm("дневная", "платная", [1, 2, 3]);
 
-    // //заочная бюджетная
-    // createListByForm("заочная", "бюджетная", 0);
-    // createListByForm("заочная", "бюджетная", 1);
-    // createListByForm("заочная", "бюджетная", 2);
+    // // //заочная бюджетная
+    await createListByForm("заочная", "бюджетная", [0]);
+    await createListByForm("заочная", "бюджетная", [1, 2, 3]);
 
-    // //заочная платная
-    // createListByForm("заочная", "платная", 0);
-    // createListByForm("заочная", "платная", 1);
-    // createListByForm("заочная", "платная", 2);
+    // // //заочная платная
+    await createListByForm("заочная", "платная", [0]);
+    await createListByForm("заочная", "платная", [1, 2, 3]);
 
-    // //дистанционная бюджетная
-    // createListByForm("дистанционная", "бюджетная", 0);
-    // createListByForm("дистанционная", "бюджетная", 1);
-    // createListByForm("дистанционная", "бюджетная", 2);
+    // // //дистанционная бюджетная
+    await createListByForm("дистанционная", "бюджетная", [0]);
+    await createListByForm("дистанционная", "бюджетная", [1, 2, 3]);
 
-    // //дистанционная платная
-    // createListByForm("дистанционная", "платная", 0);
-    // createListByForm("дистанционная", "платная", 1);
-    // createListByForm("дистанционная", "платная", 2);
+    // // //дистанционная платная
+    await createListByForm("дистанционная", "платная", [0]);
+    await createListByForm("дистанционная", "платная", [1, 2, 3]);
   };
   const getAllUsers = async (filter) => {
     const enrollee_data = await getListOfEntities("users", {
@@ -42,7 +38,7 @@ export function useCreateAddmissionList() {
       fields: [],
       page: -1,
       perPage: -1,
-      sort: ["score"],
+      sort: ["-score"],
       filter: ["role=2", "isCompleted=false", "approved=true", ...filter],
       skipTotal: -1,
     });
@@ -92,17 +88,30 @@ export function useCreateAddmissionList() {
 
   const createListByForm = async (formOfStudy, paymentType, category) => {
     let categoryRequest = "";
+    let benefitControlCount = 1;
+    let users = [];
     if (category.length == 1) {
       categoryRequest = "category=" + category[0];
+      benefitControlCount = 3;
+      users = await getAllUsers([
+        "formOfStudy='" + formOfStudy + "'",
+        "paymentType='" + paymentType + "'",
+        categoryRequest,
+      ]);
     } else {
-      categoryRequest = `category=1 || category=2 || category=3`;
+      users = await getAllUsers([
+        "formOfStudy='" + formOfStudy + "'",
+        "paymentType='" + paymentType + "'",
+      ]);
+      // categoryRequest = `category=0 || category=1 || category=2 || category=3`;
     }
     //получаем пользователей отсортированных по баллам
-    const users = await getAllUsers([
-      "formOfStudy='" + formOfStudy + "'",
-      "paymentType='" + paymentType + "'",
-      categoryRequest,
-    ]);
+    // const users = await getAllUsers([
+    //   "formOfStudy='" + formOfStudy + "'",
+    //   "paymentType='" + paymentType + "'",
+    //   categoryRequest,
+    // ]);
+    console.log(users);
 
     if (category.length > 1) {
       // console.log("sorting...");
@@ -126,7 +135,6 @@ export function useCreateAddmissionList() {
     console.log(users);
 
     // проходимся по каждому пользователю
-    return;
     for (let i = 0; i < users.length; i++) {
       const choices = await getAllUserChoices(users[i].id);
       // проходимся по каждому выбору пользователя
@@ -138,13 +146,26 @@ export function useCreateAddmissionList() {
             paymentType,
             choices[j].specialityId
           )) <
-          choices[j].expand.specialityId[
-            getFieldBasedOnStrings(formOfStudy, paymentType)
-          ]
+          Math.floor(
+            choices[j].expand.specialityId[
+              getFieldBasedOnStrings(formOfStudy, paymentType)
+            ] / benefitControlCount
+          )
         ) {
+          console.log(Math.floor(benefitControlCount));
+
           await createListItem(choices[j].userId, choices[j].specialityId);
-          // await getStudented(choices[j].userId)
-          await console.log("зачислен");
+          await getStudented(choices[j].userId);
+          console.log("зачислен");
+          sendMail(
+            users[i].name,
+            users[i].email,
+            "Завершение приема",
+            "Поздравляем, вас зачислили в ВУЗ на Cпециальность: " +
+              choices[j].expand.specialityId.name +
+              ", Факультета: " +
+              choices[j].expand.specialityId.facultyName
+          );
           break;
         } else {
           if (j >= choices.length - 1) {

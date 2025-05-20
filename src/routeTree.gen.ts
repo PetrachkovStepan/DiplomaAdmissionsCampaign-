@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as StatisticsImport } from './routes/statistics'
 import { Route as SpecialityImport } from './routes/speciality'
 import { Route as HomeImport } from './routes/home'
 import { Route as EnrolleeprofileImport } from './routes/enrolleeprofile'
@@ -21,6 +22,12 @@ import { Route as AdmissionListImport } from './routes/admissionList'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const StatisticsRoute = StatisticsImport.update({
+  id: '/statistics',
+  path: '/statistics',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const SpecialityRoute = SpecialityImport.update({
   id: '/speciality',
@@ -130,6 +137,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SpecialityImport
       parentRoute: typeof rootRoute
     }
+    '/statistics': {
+      id: '/statistics'
+      path: '/statistics'
+      fullPath: '/statistics'
+      preLoaderRoute: typeof StatisticsImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -144,6 +158,7 @@ export interface FileRoutesByFullPath {
   '/enrolleeprofile': typeof EnrolleeprofileRoute
   '/home': typeof HomeRoute
   '/speciality': typeof SpecialityRoute
+  '/statistics': typeof StatisticsRoute
 }
 
 export interface FileRoutesByTo {
@@ -155,6 +170,7 @@ export interface FileRoutesByTo {
   '/enrolleeprofile': typeof EnrolleeprofileRoute
   '/home': typeof HomeRoute
   '/speciality': typeof SpecialityRoute
+  '/statistics': typeof StatisticsRoute
 }
 
 export interface FileRoutesById {
@@ -167,6 +183,7 @@ export interface FileRoutesById {
   '/enrolleeprofile': typeof EnrolleeprofileRoute
   '/home': typeof HomeRoute
   '/speciality': typeof SpecialityRoute
+  '/statistics': typeof StatisticsRoute
 }
 
 export interface FileRouteTypes {
@@ -180,6 +197,7 @@ export interface FileRouteTypes {
     | '/enrolleeprofile'
     | '/home'
     | '/speciality'
+    | '/statistics'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -190,6 +208,7 @@ export interface FileRouteTypes {
     | '/enrolleeprofile'
     | '/home'
     | '/speciality'
+    | '/statistics'
   id:
     | '__root__'
     | '/'
@@ -200,6 +219,7 @@ export interface FileRouteTypes {
     | '/enrolleeprofile'
     | '/home'
     | '/speciality'
+    | '/statistics'
   fileRoutesById: FileRoutesById
 }
 
@@ -212,6 +232,7 @@ export interface RootRouteChildren {
   EnrolleeprofileRoute: typeof EnrolleeprofileRoute
   HomeRoute: typeof HomeRoute
   SpecialityRoute: typeof SpecialityRoute
+  StatisticsRoute: typeof StatisticsRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -223,6 +244,7 @@ const rootRouteChildren: RootRouteChildren = {
   EnrolleeprofileRoute: EnrolleeprofileRoute,
   HomeRoute: HomeRoute,
   SpecialityRoute: SpecialityRoute,
+  StatisticsRoute: StatisticsRoute,
 }
 
 export const routeTree = rootRoute
@@ -242,7 +264,8 @@ export const routeTree = rootRoute
         "/enrollee",
         "/enrolleeprofile",
         "/home",
-        "/speciality"
+        "/speciality",
+        "/statistics"
       ]
     },
     "/": {
@@ -268,6 +291,9 @@ export const routeTree = rootRoute
     },
     "/speciality": {
       "filePath": "speciality.jsx"
+    },
+    "/statistics": {
+      "filePath": "statistics.jsx"
     }
   }
 }
