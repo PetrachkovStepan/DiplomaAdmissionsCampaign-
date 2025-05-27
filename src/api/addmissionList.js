@@ -1,3 +1,4 @@
+//server-side
 import { ApiContext } from "@/context/ApiContext";
 import { sendMail } from "@/utils/email/email";
 import { useContext } from "react";

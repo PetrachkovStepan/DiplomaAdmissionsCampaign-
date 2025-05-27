@@ -12,7 +12,7 @@ export const EnrolleeProfilePage = () => {
   const Route = createFileRoute("/enrolleeprofile")({});
   const { id } = Route.useSearch();
   const [benefit, setBenefit] = useState([]);
-  const { getListOfEntities, updateEntity, getEntityById } =
+  const { getListOfEntities, updateEntity } =
     useContext(ApiContext);
   useEffect(() => {
     getAllBenefits();
@@ -53,7 +53,7 @@ export const EnrolleeProfilePage = () => {
               <option value={0}>Льготная категория 0</option>
               <option value={1}>Льготная категория 1</option>
               <option value={2}>Льготная категория 2</option>
-              <option value={3}>Льготная категория 3</option>
+              {/* <option value={3}>Льготная категория 3</option> */}
             </Select>
             <UserBenefitViewTable data={benefit} />
           </div>

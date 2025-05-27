@@ -37,6 +37,13 @@ export const ExamSertificateForm = ({ user_id }) => {
       });
       return;
     }
+    if (score < 0 || score > 100 || mark < 4 || mark > 10) {
+      notification["error"]({
+        message: "Ошибка",
+        description: "Неверные значения баллов",
+      });
+      return;
+    }
     if (exam.length < 4) {
       const data = await createEntity("ExamCertificate", {
         userId: user_id,

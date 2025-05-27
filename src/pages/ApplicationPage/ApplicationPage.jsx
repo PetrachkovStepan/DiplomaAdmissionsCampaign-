@@ -39,6 +39,30 @@ export const ApplicationPage = () => {
     getAllSpec();
     getAllChoices();
   }, []);
+  const getInfo = async () => {
+    const passport = await getListOfEntities("Passport", {
+      expand: [],
+      fields: [],
+      page: -1,
+      perPage: -1,
+      sort: [],
+      filter: ['userId="' + cookies["user-id"] + '"'],
+      skipTotal: -1,
+    });
+    const education = await getListOfEntities("EducationCertificate", {
+      expand: [],
+      fields: [],
+      page: -1,
+      perPage: -1,
+      sort: [],
+      filter: ['userId="' + cookies["user-id"] + '"'],
+      skipTotal: -1,
+    });
+    return {
+      passport: passport.data.items[0],
+      education: education.data.items[0],
+    };
+  };
   const handleAddChoiceItem = async () => {
     const spec_data = await getListOfEntities("Speciality", {
       expand: [],
@@ -160,7 +184,7 @@ export const ApplicationPage = () => {
           id={"payment"}
           title="Форма оплаты"
           onChange={(e) => {
-             setPaymentType(e.target.value);
+            setPaymentType(e.target.value);
           }}
         >
           <option value={"blank"} defaultChecked>
@@ -239,7 +263,7 @@ export const ApplicationPage = () => {
       </article>
       <ApplicationTable data={choice} />
       <Button
-        onClick={() => {
+        onClick={async () => {
           if (formOfStudy == "blank" || paymentType == "blank") {
             notification["error"]({
               message: "Ошибка",
@@ -247,7 +271,12 @@ export const ApplicationPage = () => {
             });
             return;
           }
-          printApplicationPDF(choice);
+          printApplicationPDF(
+            choice,
+            await getInfo(),
+            formOfStudy,
+            paymentType
+          );
         }}
       >
         Скaчать заявление

@@ -1,34 +1,115 @@
 import printJS from "print-js";
 
-export const printApplicationPDF = (array) => {
-  console.log("array");
-  console.log(array);
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear().toString().substr(-2);
+
+  const formattedDate = `${day.toString().padStart(2, "0")}.${month.toString().padStart(2, "0")}.${year}`;
+
+  return formattedDate;
+};
+export const printApplicationPDF = (array, info, educForm, paymentType) => {
+  console.log("info");
+  console.log(info);
 
   let outpurArray = "";
   for (let index = 0; index < array.length; index++) {
     outpurArray +=
-      "<p>" +
-      (index + 1) +
-      ". Специальность: " +
+      "<tr><td> + " +
+      educForm +
+      ", " +
+      paymentType +
+      "</td><td>" +
       array[index].expand.specialityId.name +
-      ", Факультет: " +
+      ", " +
       array[index].expand.specialityId.facultyName +
-      "</p>";
+      "</td> <td>" +
+      (index + 1) +
+      "</td> </tr>";
   }
   // Создаем HTML контент, который будет напечатан
   const htmlContent =
-    `
-    <div>
-      <title>Заявление на поступление в ВУЗ</title>
-    <div>
-        <h1>Заявление на поступление</h1>
-        ` +
+    `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Admission Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 10px;
+        }
+        .container {
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+            max-width: 800px;
+            margin: auto;
+        }
+            .dataContainer{
+            width: 100wh;
+            display:flex;
+            flex-direction: column;
+            justify-content: end;
+            align-items: end;
+            }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Заявление</h1>
+<div class="dataContainer">
+        <p>Дата рождения: ` +
+    formatDate(info.passport.birthDate) +
+    `</p>
+        <p>Паспорт: серия ` +
+    info.passport.series +
+    ` номер ` +
+    info.passport.number +
+    `</p>
+        <p>Кем и когда выдан: ` +
+    info.passport.givenByWhom +
+    `, ` +
+    formatDate(info.passport.givenDate) +
+    `</p>
+    <div/>
+        <p>     Прошу допустить меня _____________________________________________ к участию в конкурсе и сдаче вступительных испытаний для поступления на обучение в Университет в рамках контрольных цифр приема по образовательным программам высшего образования – программам бакалавриата, специалитета.</p>
+
+        <h2>Вступительные испытания</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Форма обучения</th>
+                    <th>Код и наименование образовательной программы</th>
+                    <th>Приоритет:</th>
+                </tr>
+            </thead>
+            <tbody>
+                ` +
     outpurArray +
     `
+            </tbody>
+        </table>
     </div>
-    </div>
-    `;
-
+</body>
+</html>`;
   // Используем printJS для печати HTML контента
   printJS({
     printable: htmlContent,
@@ -42,10 +123,8 @@ export const printAddmissionListPDF = (array) => {
   // Создаем HTML контент, который будет напечатан
   const htmlContent =
     `
-    <div>
-      <title>ЗАЧИСЛИТЬ НА СООТВЕТСВУЮЩИЕ СПЕЦИАЛЬНОСТИ СООТВЕТСТВУЮЩИХ ФОРМ ОБУЧЕНИЯ СЛЕДУЮЩИХ АБИТУРИЕНТОВ </title>
-    <div>
-        <h1>ЗАЧИСЛИТЬ НА СООТВЕТСВУЮЩИЕ СПЕЦИАЛЬНОСТИ СООТВЕТСТВУЮЩИХ ФОРМ ОБУЧЕНИЯ СЛЕДУЮЩИХ АБИТУРИЕНТОВ</h1>
+    <div style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <h1 style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">ЗАЧИСЛИТЬ НА СООТВЕТСВУЮЩИЕ СПЕЦИАЛЬНОСТИ СООТВЕТСТВУЮЩИХ ФОРМ ОБУЧЕНИЯ СЛЕДУЮЩИХ АБИТУРИЕНТОВ</h1>
         ` +
     outputArray +
     `
@@ -71,7 +150,7 @@ const createAddmissionArray = (array) => {
       array[index - 1]?.expand.specialityId.name
     ) {
       outputArray +=
-        "<h2>" +
+        "<h2  style='width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;'>" +
         "Специальность: " +
         array[index].expand.specialityId.name +
         ", Факультет: " +
